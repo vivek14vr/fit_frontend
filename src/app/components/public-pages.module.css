@@ -68,12 +68,17 @@
 }
 
 .page :global(.public-page-hero-grid) {
-  min-height: 600px;
+  min-height: 540px;
   grid-template-columns: minmax(0, 1.06fr) minmax(300px, .74fr);
   gap: clamp(52px, 9vw, 132px);
-  padding-top: 74px;
-  padding-bottom: 74px;
+  padding-top: 60px;
+  padding-bottom: 60px;
 }
+
+.page :global(.public-page-hero-grid > *),
+.page :global(.public-detail-heading > *),
+.page :global(.public-detail-cards > *),
+.page :global(.programme-landing-card-body) { min-width: 0; }
 
 .page :global(.public-page-hero-grid) > div:first-child {
   position: relative;
@@ -170,7 +175,7 @@
 
 .page :global(.public-page-body) { background: var(--home-cream); }
 
-.page :global(.public-detail-section) { padding: 112px 0; }
+.page :global(.public-detail-section) { padding: clamp(78px, 7vw, 104px) 0; }
 .page :global(.public-detail-section-soft) { background: var(--home-panel); }
 
 .page :global(.about-page-grid) {
@@ -183,7 +188,8 @@
 .page :global(.about-page-portrait) {
   position: relative;
   overflow: hidden;
-  min-height: 520px;
+  min-height: 0;
+  aspect-ratio: 3 / 4;
   border-radius: 180px 180px 3px 3px;
   background: #dae4d5;
   box-shadow: 0 24px 54px rgba(22, 75, 71, .14);
@@ -309,15 +315,18 @@
 .page :global(.contact-form label > span) { font-size: 14px; }
 .page :global(.contact-form input:not([type="checkbox"])),
 .page :global(.contact-form textarea),
+.page :global(.contact-form select),
 .page :global(.contact-phone-field select) { width: 100%; border: 1px solid #d9d3c5; border-radius: 2px; background: #fffefa; color: var(--home-ink); font: 400 16px/1.5 var(--font-body); padding: 14px 16px; transition: border-color 180ms ease, box-shadow 180ms ease; }
 .page :global(.contact-form input:not([type="checkbox"])) { min-height: 54px; }
 .page :global(.contact-form textarea) { min-height: 132px; resize: vertical; }
 .page :global(.contact-phone-field) { display: grid; grid-template-columns: 158px minmax(0, 1fr); gap: 10px; }
+.page :global(.contact-form select),
 .page :global(.contact-phone-field select) { min-height: 54px; }
 .page :global(.contact-form input::placeholder),
 .page :global(.contact-form textarea::placeholder) { color: #8b918d; }
 .page :global(.contact-form input:not([type="checkbox"]):focus),
 .page :global(.contact-form textarea:focus),
+.page :global(.contact-form select:focus),
 .page :global(.contact-phone-field select:focus) { border-color: var(--home-teal); outline: 0; box-shadow: 0 0 0 3px rgba(22, 75, 71, .12); }
 .page :global(.contact-form label small) { color: var(--home-muted); font-size: 12px; font-weight: 400; }
 .page :global(.contact-consent) { display: grid !important; grid-template-columns: 24px 1fr; gap: 12px !important; align-items: start; padding: 16px; border: 1px solid #d9d3c5; color: var(--home-muted) !important; font-size: 14px; font-weight: 400 !important; }
@@ -325,6 +334,14 @@
 .page :global(.contact-submit) { width: 100%; justify-content: center; min-height: 62px; margin-top: 4px; font-size: 16px; }
 .page :global(.contact-form-meta) { margin: 0; color: var(--home-muted); font-size: 12px; text-align: center; }
 .page :global(.contact-form-meta a) { color: var(--home-ink); text-decoration: underline; text-underline-offset: 3px; }
+.page :global(.contact-form-success) { display: grid; gap: 16px; padding: clamp(24px, 4vw, 38px); border: 1px solid var(--home-line); background: #e4ebe0; }
+.page :global(.contact-form-success h3) { max-width: 12ch; margin: 0; color: var(--home-ink); font: 300 clamp(38px, 4vw, 54px)/1.04 var(--font-written); letter-spacing: -.05em; }
+.page :global(.contact-form-success > p:not(.home-section-label):not(.contact-form-meta)) { max-width: 520px; margin: 0; color: var(--home-muted); }
+.page :global(.contact-calendar-link) { justify-self: start; margin-top: 4px; }
+.page :global(.contact-edit-link) { justify-self: start; padding: 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--home-ink); font: 600 13px/1.4 var(--font-body); cursor: pointer; }
+.page :global(.consultation-contact-section) { padding-top: clamp(64px, 8vw, 96px); }
+.page :global(.consultation-contact-card) { max-width: 900px; margin-inline: auto; }
+.page :global(.consultation-contact-card h2) { max-width: 12ch; margin: 16px 0 14px; color: var(--home-ink); font: 300 clamp(44px, 5vw, 64px)/1.04 var(--font-written); letter-spacing: -.05em; }
 .page :global(.contact-assessment-card .home-section-label) { color: var(--home-haldi); }
 .page :global(.contact-assessment-summary) { display: grid; grid-template-columns: 54px 1fr; gap: 16px; align-items: start; margin: 26px 0 30px; padding: 18px; border: 1px solid #d9d3c5; }
 .page :global(.contact-assessment-summary > span) { display: grid; width: 54px; height: 54px; place-items: center; background: var(--home-teal); color: #fff; font-size: 24px; }
@@ -368,7 +385,7 @@
   display: grid;
   grid-template-rows: 230px 1fr;
   overflow: hidden;
-  min-height: 560px;
+  min-height: 500px;
   border: 1px solid var(--home-line);
   background: #fdfcf8;
   box-shadow: 0 18px 40px rgba(22, 75, 71, .06);
@@ -513,7 +530,8 @@
 .programmeDetail :global(.marketing-detail-lede) { max-width: 540px; margin-top: 26px; color: var(--home-muted); font-size: 17px; }
 .programmeDetail :global(.marketing-programme-detail-hero .marketing-button) { margin-top: 8px; }
 .programmeDetail :global(.marketing-detail-image) {
-  min-height: 460px;
+  min-height: 0;
+  aspect-ratio: 4 / 3;
   border-radius: 150px 150px 3px 3px;
   box-shadow: 0 28px 60px rgba(22, 75, 71, .14);
 }
@@ -534,11 +552,11 @@
   .page :global(.public-page-hero-grid) { min-height: 0; grid-template-columns: 1fr; gap: 42px; padding-top: 62px; padding-bottom: 68px; }
   .page :global(.public-page-hero-grid h1) { font-size: clamp(48px, 10vw, 72px); }
   .page :global(.public-page-index) { width: min(100%, 460px); min-height: 330px; margin-inline: auto; }
-  .page :global(.public-detail-section) { padding: 76px 0; }
+  .page :global(.public-detail-section) { padding: 68px 0; }
   .page :global(.public-detail-heading),
   .page :global(.consultation-page-card),
   .page :global(.about-page-grid) { grid-template-columns: 1fr; gap: 30px; }
-  .page :global(.about-page-portrait) { width: min(100%, 520px); min-height: 460px; margin-inline: auto; }
+  .page :global(.about-page-portrait) { width: min(100%, 520px); margin-inline: auto; }
   .page :global(.consultation-steps) { grid-template-columns: 1fr; }
   .page :global(.contact-form-layout) { grid-template-columns: 1fr; }
   .page :global(.about-practice-grid) { grid-template-columns: 1fr; }
@@ -560,15 +578,15 @@
   .page :global(.programme-landing-note .home-button) { justify-self: start; }
   .page :global(.programme-process-grid) { grid-template-columns: 1fr; }
   .programmeDetail :global(.marketing-detail-hero-grid) { grid-template-columns: 1fr; gap: 42px; }
-  .programmeDetail :global(.marketing-detail-image) { width: min(100%, 520px); min-height: 430px; margin-inline: auto; }
+  .programmeDetail :global(.marketing-detail-image) { width: min(100%, 520px); margin-inline: auto; }
 }
 
 @media (max-width: 560px) {
-  .page :global(.public-page-hero-grid) { padding-top: 50px; padding-bottom: 58px; }
+  .page :global(.public-page-hero-grid) { padding-top: 42px; padding-bottom: 48px; }
   .page :global(.public-page-hero-grid h1) { font-size: clamp(44px, 14vw, 62px); }
-  .page :global(.public-page-index) { min-height: 300px; padding: 30px; border-radius: 150px 150px 3px 3px; }
-  .page :global(.public-detail-section) { padding: 64px 0; }
-  .page :global(.home-feature-card) { min-height: 300px; padding: 24px; }
+  .page :global(.public-page-index) { min-height: 260px; padding: 26px; border-radius: 130px 130px 3px 3px; }
+  .page :global(.public-detail-section) { padding: 54px 0; }
+  .page :global(.home-feature-card) { min-height: 0; padding: 24px; }
   .page :global(.contact-field-grid) { grid-template-columns: 1fr; }
   .page :global(.contact-form-card) { padding: 24px; }
   .page :global(.contact-assessment-card) { padding: 24px; }
@@ -583,7 +601,7 @@
   .page :global(.programme-landing-card-body) { padding: 22px; }
   .page :global(.programme-landing-card .home-card-kicker) { margin-top: 22px; }
   .page :global(.programme-process-grid article) { min-height: 0; }
-  .programmeDetail :global(.marketing-detail-image) { min-height: 350px; border-radius: 150px 150px 3px 3px; }
+  .programmeDetail :global(.marketing-detail-image) { min-height: 0; border-radius: 120px 120px 3px 3px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

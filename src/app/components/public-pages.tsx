@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { ReactNode } from "react";
-import ConsultationOffer from "./consultation-offer";
+import ContactEnquiryForm from "./contact-enquiry-form";
 import { MarketingFooter, MarketingHeader } from "./marketing-chrome";
 import { programmeData } from "./marketing-data";
 import s from "./public-pages.module.css";
@@ -276,20 +276,8 @@ export function ContactPageContent() {
           <p className="home-section-label">YOUR DETAILS</p>
           <h2>Where should we reach you?</h2>
           <p className="contact-form-intro">Deepti’s team uses these details to reply to your enquiry and share the right booking information.</p>
-          <div className="contact-form-notice" role="note"><span aria-hidden="true">i</span><p><strong>Sending this form does not book your assessment.</strong> We will reply with the next step and any consultation details you need.</p></div>
-          <form className="contact-form" action="mailto:deeptiofficialsherawat@gmail.com" method="post" encType="text/plain">
-            <div className="contact-field-grid">
-              <label><span>First name</span><input name="firstName" type="text" autoComplete="given-name" placeholder="First name" required /></label>
-              <label><span>Last name</span><input name="lastName" type="text" autoComplete="family-name" placeholder="Last name" required /></label>
-            </div>
-            <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@example.com" required /></label>
-            <label><span>Town / City</span><input name="city" type="text" autoComplete="address-level2" placeholder="Your town or city" /></label>
-            <label><span>WhatsApp number</span><div className="contact-phone-field"><select name="countryCode" defaultValue="+1" aria-label="Country code"><option value="+1">USA (+1)</option><option value="+91">India (+91)</option><option value="+44">UK (+44)</option><option value="+61">Australia (+61)</option><option value="+1-CA">Canada (+1)</option></select><input name="whatsapp" type="tel" autoComplete="tel" placeholder="Your number" /></div><small>Deepti’s team will contact you on this number if needed.</small></label>
-            <label><span>What would you like help with?</span><textarea name="message" rows={5} placeholder="Tell us a little about what brings you here." required /></label>
-            <label className="contact-consent"><input name="consent" type="checkbox" required /><span>I understand this is an enquiry. Any consultation, programme or fee will be discussed separately.</span></label>
-            <button className="home-button home-button-primary contact-submit" type="submit">Send my enquiry <span aria-hidden="true">↗</span></button>
-            <p className="contact-form-meta">You can also email <a href="mailto:deeptiofficialsherawat@gmail.com">deeptiofficialsherawat@gmail.com</a></p>
-          </form>
+          <div className="contact-form-notice" role="note"><span aria-hidden="true">i</span><p><strong>Submit the form to continue to booking.</strong> The matching calendar link will appear after you share your details.</p></div>
+          <ContactEnquiryForm />
         </div>
         <aside className="contact-assessment-card">
           <p className="home-section-label">YOUR ASSESSMENT</p>
@@ -328,18 +316,13 @@ export function SpacesPageContent() {
 
 export function ConsultationPageContent() {
   return (
-    <section className="public-detail-section">
-      <div className="home-shell consultation-page-card">
-        <div>
-          <p className="home-section-label">THE FIRST STEP</p>
-          <h2>Bring the whole picture.</h2>
-        </div>
-        <ConsultationOffer />
-      </div>
-      <div className="home-shell consultation-steps">
-        <div><span>01</span><strong>Share the context</strong><p>Tell us what has been happening and what you want to understand.</p></div>
-        <div><span>02</span><strong>Build the starting point</strong><p>We bring together your history, patterns and useful measurements.</p></div>
-        <div><span>03</span><strong>Leave with a next step</strong><p>Your first programme should feel clear enough to begin.</p></div>
+    <section className="public-detail-section consultation-contact-section">
+      <div className="home-shell consultation-contact-card contact-form-card">
+        <p className="home-section-label">THE FIRST STEP</p>
+        <h2>Where should we reach you?</h2>
+        <p className="contact-form-intro">Share a little context about what brings you here. After you submit the form, you can choose a time for your 1:1 conversation.</p>
+        <div className="contact-form-notice" role="note"><span aria-hidden="true">i</span><p><strong>This form does not take payment.</strong> It simply helps you choose the right booking calendar for your conversation.</p></div>
+        <ContactEnquiryForm />
       </div>
     </section>
   );

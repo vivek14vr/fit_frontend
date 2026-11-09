@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { type ImageLoaderProps } from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import s from "../homepage.module.css";
 
 // Let the image CDN supply a real responsive srcset, without downloading the
@@ -22,14 +22,12 @@ export default function HomePhoto({ src, alt, sizes, priority = false }: {
 }) {
   const [visible, setVisible] = useState<string | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
-  const requested = useRef(src);
-  useEffect(() => { requested.current = src; }, [src]);
 
   const renderImage = (imageSrc: string, imageAlt: string, className: string, imageProps: { loading?: "eager"; preload?: boolean; onLoad?: () => void; onError?: () => void } = {}) => {
-    const props = { ...imageProps, alt: imageAlt, fill: true, sizes, className };
+    const props = { ...imageProps, fill: true, sizes, className };
     return isLocalImage(imageSrc)
-      ? <Image src={imageSrc} {...props} />
-      : <Image loader={foodImageLoader} src={imageSrc} {...props} />;
+      ? <Image src={imageSrc} alt={imageAlt} {...props} />
+      : <Image loader={foodImageLoader} src={imageSrc} alt={imageAlt} {...props} />;
   };
 
   return (
@@ -40,8 +38,8 @@ export default function HomePhoto({ src, alt, sizes, priority = false }: {
       {visible && failed !== src ? renderImage(visible, visible === src ? alt : "", s.loadedPhoto, { loading: priority ? "eager" : undefined }) : null}
       {visible !== src && failed !== src ? renderImage(src, "", s.loadingPhoto, {
         preload: priority,
-        onLoad: () => { if (requested.current === src) setVisible(src); },
-        onError: () => { if (requested.current === src) setFailed(src); },
+        onLoad: () => setVisible(src),
+        onError: () => setFailed(src),
       }) : null}
       {failed === src ? <span className={s.photoError} role="status">Photograph unavailable</span> : null}
     </>
