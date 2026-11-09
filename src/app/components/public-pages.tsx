@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import ConsultationOffer from "./consultation-offer";
 import { MarketingFooter, MarketingHeader } from "./marketing-chrome";
+import { programmeData } from "./marketing-data";
 import s from "./public-pages.module.css";
 
 type PublicPageLayoutProps = {
@@ -11,6 +12,7 @@ type PublicPageLayoutProps = {
   description: string;
   index: string;
   pageClassName?: string;
+  hideHero?: boolean;
   children: ReactNode;
 };
 
@@ -20,64 +22,45 @@ export function PublicPageLayout({
   description,
   index,
   pageClassName,
+  hideHero = false,
   children,
 }: PublicPageLayoutProps) {
   return (
     <main className={`home-page public-page ${s.page}${pageClassName ? ` ${pageClassName}` : ""}`}>
       <a className="marketing-skip-link" href="#main-content">Skip to content</a>
       <MarketingHeader />
-      <section className="public-page-hero">
-        <div className="home-shell public-page-hero-grid">
-          <div>
-            <p className="home-eyebrow">{eyebrow}</p>
-            <h1>{title}</h1>
-            <p className="home-hero-lede">{description}</p>
-            <div className="home-hero-actions">
-              <Link className="home-button home-button-primary" href="/consultation">
-                Book a 1:1 with Deepti <span aria-hidden="true">↗</span>
-              </Link>
-              <Link className="home-text-link" href="/programmes">
-                Explore programmes <span aria-hidden="true">→</span>
-              </Link>
+      {!hideHero && (
+        <section className="public-page-hero">
+          <div className="home-shell public-page-hero-grid">
+            <div>
+              <p className="home-eyebrow">{eyebrow}</p>
+              <h1>{title}</h1>
+              <p className="home-hero-lede">{description}</p>
+              <div className="home-hero-actions">
+                <Link className="home-button home-button-primary" href="/consultation">
+                  Book a 1:1 with Deepti <span aria-hidden="true">↗</span>
+                </Link>
+                <Link className="home-text-link" href="/programmes">
+                  Explore programmes <span aria-hidden="true">→</span>
+                </Link>
+              </div>
             </div>
+            <aside className="public-page-index" aria-label="Page index">
+              <div className="public-page-index-topline">
+                <span>{index}</span>
+                <p>THE DEEPA CHAKRA</p>
+              </div>
+              <strong>Considered care, held in one connected practice.</strong>
+              <small>Understand · Tend · Measure</small>
+            </aside>
           </div>
-          <aside className="public-page-index" aria-label="Page index">
-            <span>{index}</span>
-            <p>THE DEEPA CHAKRA</p>
-            <strong>Considered care, held in one connected practice.</strong>
-            <small>Understand · Tend · Measure</small>
-          </aside>
-        </div>
-      </section>
+        </section>
+      )}
       <div className="public-page-body" id="main-content">{children}</div>
       <MarketingFooter />
     </main>
   );
 }
-
-const programmeDetails = [
-  {
-    number: "01",
-    title: "Understand",
-    tag: "THE WHOLE PICTURE",
-    description:
-      "We begin with your history, symptoms, food patterns and lab reports — the complete picture, not a single number.",
-  },
-  {
-    number: "02",
-    title: "Tend",
-    tag: "THE DAILY PRACTICE",
-    description:
-      "Your food becomes a practical protocol rooted in Ayurveda and shaped around the life you actually live.",
-  },
-  {
-    number: "03",
-    title: "Measure",
-    tag: "THE NEXT USEFUL STEP",
-    description:
-      "We track the markers that matter over time, so the plan can respond to what your body is telling us.",
-  },
-];
 
 export function ApproachPageContent() {
   return (
@@ -92,7 +75,7 @@ export function ApproachPageContent() {
             Ayurveda gives us the depth to understand the body. Functional nutrition gives us a practical way to work with it. Modern diagnostics show us what is changing.
           </p>
         </div>
-        <div className="home-shell home-approach-grid public-detail-cards">
+        <div className="home-shell home-approach-grid approach-principles-grid public-detail-cards">
           <article className="home-feature-card home-feature-card-teal">
             <p className="home-card-kicker">01 / START WITH CONTEXT</p>
             <h3>The details matter.</h3>
@@ -103,12 +86,53 @@ export function ApproachPageContent() {
             <h3>Small, considered changes.</h3>
             <p>We build a programme around understanding, not restriction, so it can stay useful after the first appointment.</p>
           </article>
+          <article className="home-feature-card home-feature-card-sage">
+            <p className="home-card-kicker">03 / REVIEW TOGETHER</p>
+            <h3>Progress is a conversation.</h3>
+            <p>We notice what is shifting, what feels difficult and what deserves attention next—then adjust with care.</p>
+          </article>
         </div>
       </section>
       <section className="public-detail-section public-detail-section-soft">
         <div className="home-shell public-detail-heading">
-          <div><p className="home-section-label">THE PRACTICE</p><h2>Clarity before complexity.</h2></div>
+          <div><p className="home-section-label">HOW THE WORK MOVES</p><h2>Clarity before complexity.</h2></div>
           <p>Every recommendation should answer a simple question: what is the next useful thing this person can actually do?</p>
+        </div>
+        <div className="home-shell approach-steps-grid">
+          <article><span>01</span><h3>Listen</h3><p>Start with your priorities, food patterns, routines and the questions you want answered.</p></article>
+          <article><span>02</span><h3>Map</h3><p>Bring together the context around digestion, energy, sleep, lifestyle and relevant health markers.</p></article>
+          <article><span>03</span><h3>Practise</h3><p>Choose a small number of realistic food and lifestyle experiments to try in your own week.</p></article>
+          <article><span>04</span><h3>Reflect</h3><p>Review what you noticed, keep what helps and decide the next useful step together.</p></article>
+        </div>
+      </section>
+      <section className="public-detail-section approach-editorial-section">
+        <div className="home-shell approach-editorial-grid">
+          <div>
+            <p className="home-section-label">THE DAILY PRACTICE</p>
+            <h2>Make the next meal feel less complicated.</h2>
+            <p>We look for the useful detail: how you shop, what you cook, where your energy dips and which routines are already helping.</p>
+            <p>From there, guidance can become a rhythm you can return to—not another set of rules to perform perfectly.</p>
+          </div>
+          <figure className="approach-editorial-image">
+            <Image src="/editorial/approach-cooking.jpg" alt="Fresh ingredients arranged on a chopping board ready to cook" width={1600} height={1600} sizes="(max-width: 900px) calc(100vw - 40px), 42vw" />
+            <figcaption>Simple ingredients. A more considered rhythm.</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section className="public-detail-section approach-boundaries-section">
+        <div className="home-shell public-detail-heading">
+          <div><p className="home-section-label">THE BOUNDARIES</p><h2>Support that knows its place.</h2></div>
+          <p>Nutrition education can sit alongside your existing care. It should add context and confidence without replacing diagnosis, treatment or advice from your medical team.</p>
+        </div>
+        <div className="home-shell approach-boundaries-grid public-detail-cards">
+          <article className="home-feature-card home-feature-card-paper"><p className="home-card-kicker">EDUCATION</p><h3>Understand what you can act on.</h3><p>We translate nutrition concepts into practical choices, with language you can take into everyday life.</p></article>
+          <article className="home-feature-card home-feature-card-teal"><p className="home-card-kicker">COLLABORATION</p><h3>Keep your medical team close.</h3><p>Share relevant reports and advice so nutrition guidance can respect the care you already have in place.</p></article>
+        </div>
+      </section>
+      <section className="public-detail-section public-detail-section-soft approach-cta-section">
+        <div className="home-shell public-detail-heading">
+          <div><p className="home-section-label">A GOOD PLACE TO BEGIN</p><h2>Bring the questions that are on your mind.</h2></div>
+          <div><p>A first conversation gives us time to understand your priorities and decide whether the practice is the right fit.</p><Link className="home-button home-button-primary" href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div>
         </div>
       </section>
     </>
@@ -129,14 +153,64 @@ export function AboutPageContent() {
             <h2>Where Ayurveda meets <em>functional nutrition.</em></h2>
             <p>For more than 10 years and 700+ client journeys worldwide, Deepti has worked at the intersection of Ayurveda, functional nutrition and metabolic health.</p>
             <p>Her approach looks at digestion, food patterns, lifestyle, body type and health markers—especially when Indian eating habits meet the realities of modern life abroad.</p>
+            <p>The work is intentionally personal: understand what is happening, find the smallest useful experiment, then make space to learn from it.</p>
             <Link className="home-button home-button-primary" href="/consultation">Start with a conversation <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
       </section>
       <section className="public-detail-section public-detail-section-soft">
         <div className="home-shell public-detail-heading">
-          <div><p className="home-section-label">THE PRACTICE</p><h2>Personal to the person in front of us.</h2></div>
-          <p>Ayurvedic principles and functional nutrition come together in a plan shaped around your food, your routines and the markers that matter to you.</p>
+          <div><p className="home-section-label">THE PRACTICE</p><h2>A considered practice for real life.</h2></div>
+          <p>Ayurvedic principles and functional nutrition come together in a plan shaped around your food, your routines and the markers that matter to you—not an idealised version of your day.</p>
+        </div>
+        <div className="home-shell about-practice-grid public-detail-cards">
+          <article className="home-feature-card home-feature-card-teal">
+            <p className="home-card-kicker">01 / CONTEXT FIRST</p>
+            <h3>The whole picture belongs in the room.</h3>
+            <p>Your history, food culture, routines, symptoms and relevant health markers help shape the questions we ask together.</p>
+          </article>
+          <article className="home-feature-card home-feature-card-paper">
+            <p className="home-card-kicker">02 / PRACTICAL BY DESIGN</p>
+            <h3>Small steps can still be meaningful.</h3>
+            <p>Guidance should feel clear enough to try on an ordinary week, with room for preferences, travel, family and change.</p>
+          </article>
+          <article className="home-feature-card home-feature-card-sage">
+            <p className="home-card-kicker">03 / REVIEW TOGETHER</p>
+            <h3>Notice, learn, adjust.</h3>
+            <p>Progress is a conversation. We pay attention to what feels useful and decide what deserves more attention next.</p>
+          </article>
+        </div>
+      </section>
+      <section className="public-detail-section about-editorial-section">
+        <div className="home-shell about-editorial-grid">
+          <figure className="about-editorial-image">
+            <Image src="/editorial/about-food.jpg" alt="A nourishing meal arranged with herbs and colourful ingredients" width={1600} height={1067} sizes="(max-width: 900px) calc(100vw - 40px), 52vw" />
+            <figcaption>Food, context and the everyday rhythm around it.</figcaption>
+          </figure>
+          <div>
+            <p className="home-section-label">THE EVERYDAY PRACTICE</p>
+            <h2>Good guidance has to meet you where life happens.</h2>
+            <p>That might mean a familiar family meal, a busy work week, travel between two homes or a health report that has left you with more questions than answers.</p>
+            <p>The aim is not to make your life smaller. It is to help you understand the patterns around food and wellbeing so your next choice feels more informed and more yours.</p>
+          </div>
+        </div>
+      </section>
+      <section className="public-detail-section about-principles-section">
+        <div className="home-shell public-detail-heading">
+          <div><p className="home-section-label">WHAT GUIDES THE WORK</p><h2>Care with a point of view.</h2></div>
+          <p>These principles keep the practice warm, evidence-informed and grounded in the person sitting across from us.</p>
+        </div>
+        <div className="home-shell about-principles-grid">
+          <article><span>01</span><h3>Curiosity</h3><p>Ask better questions before reaching for a recommendation.</p></article>
+          <article><span>02</span><h3>Context</h3><p>Respect the food, routines and culture that make your life yours.</p></article>
+          <article><span>03</span><h3>Clarity</h3><p>Translate complexity into a next step you can understand.</p></article>
+          <article><span>04</span><h3>Partnership</h3><p>Keep the process collaborative, reflective and kind.</p></article>
+        </div>
+      </section>
+      <section className="public-detail-section public-detail-section-soft about-cta-section">
+        <div className="home-shell public-detail-heading">
+          <div><p className="home-section-label">A GOOD PLACE TO BEGIN</p><h2>You do not need all the answers first.</h2></div>
+          <div><p>Bring the questions you have, the patterns you have noticed and the parts that feel difficult to untangle. The first conversation is where we find the right starting point.</p><Link className="home-button home-button-primary" href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div>
         </div>
       </section>
     </>
@@ -144,57 +218,95 @@ export function AboutPageContent() {
 }
 
 export function ProgrammesPageContent() {
+  const programmeImages: Record<string, string> = {
+    gut: "/programmes/gut.jpg",
+    liver: "/programmes/liver.jpg",
+    "weight-metabolic": "/programmes/metabolic.jpg",
+    skin: "/programmes/skin.jpg",
+  };
+
   return (
     <section className="public-detail-section">
       <div className="home-shell public-detail-heading">
-        <div><p className="home-section-label">THE METHOD / दीपन DĪPANA</p><h2>A programme that moves with you.</h2></div>
-        <p>Each phase gives the next one its meaning. The work is measured, personal and built for real life.</p>
+        <div><p className="home-section-label">THE METHOD / दीपन DĪPANA</p><h2>Four paths, one personal approach.</h2></div>
+        <p>Choose the concern that brought you here. Every programme begins with context, becomes practical through small experiments, and is reviewed with you over time.</p>
       </div>
-      <div className="home-shell home-programme-grid public-detail-cards">
-        {programmeDetails.map((programme) => (
-          <article className="home-programme-card" key={programme.number}>
-            <div className="home-programme-topline"><span>{programme.number}</span><span aria-hidden="true">↗</span></div>
-            <p className="home-card-kicker">{programme.tag}</p>
-            <h3>{programme.title}</h3>
-            <p>{programme.description}</p>
-            <span className="home-card-rule" aria-hidden="true" />
+      <div className="home-shell programme-landing-grid">
+        {programmeData.map((programme) => (
+          <article className={`programme-landing-card programme-landing-card-${programme.colour}`} key={programme.slug}>
+            <div className="programme-landing-image">
+              <Image src={programmeImages[programme.slug]} alt={`Fresh food for the ${programme.title} programme`} fill sizes="(max-width: 700px) calc(100vw - 40px), 50vw" />
+            </div>
+            <div className="programme-landing-card-body">
+              <div className="programme-landing-topline"><span>{programme.number}</span><Link href={`/programmes/${programme.slug}`} aria-label={`Explore ${programme.title}`}>↗</Link></div>
+              <p className="home-card-kicker">{programme.eyebrow}</p>
+              <h3>{programme.title}</h3>
+              <p>{programme.description}</p>
+              <ul>{programme.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
+              <Link className="home-text-link" href={`/programmes/${programme.slug}`}>Explore {programme.shortTitle} <span aria-hidden="true">↗</span></Link>
+            </div>
           </article>
         ))}
       </div>
+      <div className="home-shell programme-landing-note">
+        <p className="home-section-label">A CLEARER STARTING POINT</p>
+        <p>You do not need to choose perfectly before you begin. A 1:1 consultation gives us space to understand your history and decide which path, if any, makes sense for you.</p>
+        <Link className="home-button home-button-primary" href="/consultation">Start with a conversation <span aria-hidden="true">↗</span></Link>
+      </div>
+      <section className="public-detail-section public-detail-section-soft programme-landing-process">
+        <div className="home-shell public-detail-heading">
+          <div><p className="home-section-label">HOW THE WORK MOVES</p><h2>From understanding to useful action.</h2></div>
+          <p>The programme is not a rigid meal plan. It is a shared process that turns your priorities into choices you can understand, test and keep.</p>
+        </div>
+        <div className="home-shell programme-process-grid">
+          <article><span>01</span><h3>Understand</h3><p>Bring your history, food patterns, routines and relevant reports into one considered picture.</p></article>
+          <article><span>02</span><h3>Tend</h3><p>Choose a few practical changes that respect your culture, preferences, energy and everyday life.</p></article>
+          <article><span>03</span><h3>Measure</h3><p>Notice what is shifting and review the next useful step together, without chasing quick fixes.</p></article>
+        </div>
+      </section>
     </section>
   );
 }
 
 export function ContactPageContent() {
   return (
-    <>
-      <section className="public-detail-section">
-        <div className="home-shell public-detail-heading">
-          <div><p className="home-section-label">BEGIN HERE</p><h2>A thoughtful next step.</h2></div>
-          <p>Bring your questions, your history and the everyday context around your health. We will help you find the right starting point.</p>
+    <section className="public-detail-section contact-form-section">
+      <div className="home-shell contact-form-layout">
+        <div className="contact-form-card">
+          <p className="home-section-label">YOUR DETAILS</p>
+          <h2>Where should we reach you?</h2>
+          <p className="contact-form-intro">Deepti’s team uses these details to reply to your enquiry and share the right booking information.</p>
+          <div className="contact-form-notice" role="note"><span aria-hidden="true">i</span><p><strong>Sending this form does not book your assessment.</strong> We will reply with the next step and any consultation details you need.</p></div>
+          <form className="contact-form" action="mailto:deeptiofficialsherawat@gmail.com" method="post" encType="text/plain">
+            <div className="contact-field-grid">
+              <label><span>First name</span><input name="firstName" type="text" autoComplete="given-name" placeholder="First name" required /></label>
+              <label><span>Last name</span><input name="lastName" type="text" autoComplete="family-name" placeholder="Last name" required /></label>
+            </div>
+            <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@example.com" required /></label>
+            <label><span>Town / City</span><input name="city" type="text" autoComplete="address-level2" placeholder="Your town or city" /></label>
+            <label><span>WhatsApp number</span><div className="contact-phone-field"><select name="countryCode" defaultValue="+1" aria-label="Country code"><option value="+1">USA (+1)</option><option value="+91">India (+91)</option><option value="+44">UK (+44)</option><option value="+61">Australia (+61)</option><option value="+1-CA">Canada (+1)</option></select><input name="whatsapp" type="tel" autoComplete="tel" placeholder="Your number" /></div><small>Deepti’s team will contact you on this number if needed.</small></label>
+            <label><span>What would you like help with?</span><textarea name="message" rows={5} placeholder="Tell us a little about what brings you here." required /></label>
+            <label className="contact-consent"><input name="consent" type="checkbox" required /><span>I understand this is an enquiry. Any consultation, programme or fee will be discussed separately.</span></label>
+            <button className="home-button home-button-primary contact-submit" type="submit">Send my enquiry <span aria-hidden="true">↗</span></button>
+            <p className="contact-form-meta">You can also email <a href="mailto:deeptiofficialsherawat@gmail.com">deeptiofficialsherawat@gmail.com</a></p>
+          </form>
         </div>
-        <div className="home-shell contact-page-grid public-detail-cards">
-          <article className="home-feature-card home-feature-card-teal">
-            <p className="home-card-kicker">01 / CONSULTATION</p>
-            <h3>Start with a conversation.</h3>
-            <p>Book a 1:1 Health Assessment to discuss your priorities and the most useful next step.</p>
-            <Link className="home-text-link home-text-link-light" href="/consultation">View consultation options <span aria-hidden="true">↗</span></Link>
-          </article>
-          <article className="home-feature-card home-feature-card-paper">
-            <p className="home-card-kicker">02 / EMAIL</p>
-            <h3>Stay in touch.</h3>
-            <p>For general enquiries, email the practice and share a little context about what you are looking for.</p>
-            <a className="home-text-link" href="mailto:deeptiofficialsherawat@gmail.com">Email Deepti <span aria-hidden="true">↗</span></a>
-          </article>
-        </div>
-      </section>
-      <section className="public-detail-section public-detail-section-soft">
-        <div className="home-shell public-detail-heading">
-          <div><p className="home-section-label">A NOTE ON CARE</p><h2>Education, not a replacement for medical advice.</h2></div>
-          <p>Information shared here is educational. Continue working with your medical team for diagnosis, treatment and medication decisions.</p>
-        </div>
-      </section>
-    </>
+        <aside className="contact-assessment-card">
+          <p className="home-section-label">YOUR ASSESSMENT</p>
+          <h2>What we can explore together</h2>
+          <div className="contact-assessment-summary"><span aria-hidden="true">✓</span><div><strong>Personalised Health Assessment</strong><p>With Deepti and her team of qualified nutritionists.</p></div></div>
+          <p className="contact-assessment-label">WHAT IS REVIEWED IN IT</p>
+          <ul>
+            <li>Your current priorities</li>
+            <li>Your food habits and routines</li>
+            <li>Your symptoms and health history</li>
+            <li>Relevant health reports or markers</li>
+            <li>Your previous attempts and what felt useful</li>
+          </ul>
+          <div className="contact-assessment-note"><strong>No payment details are requested here.</strong><p>Consultation options, fees and any programme decision are discussed separately.</p></div>
+        </aside>
+      </div>
+    </section>
   );
 }
 

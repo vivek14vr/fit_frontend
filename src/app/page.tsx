@@ -38,6 +38,8 @@ export default function Home() {
   const [active, setActive] = useState(0);
   const [step, setStep] = useState<number | null>(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const programmeSteps = useRef<(HTMLDivElement | null)[]>([]);
+  const programmeSection = useRef<HTMLElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const programme = programmeData[active];
 
@@ -52,6 +54,20 @@ export default function Home() {
       });
     }, { threshold: .12 });
     root.current?.querySelectorAll("[data-home-reveal]").forEach(element => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const section = programmeSection.current;
+    if (!section || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const index = Number((entry.target as HTMLElement).dataset.programmeStep);
+        if (Number.isInteger(index)) setActive(index);
+      });
+    }, { rootMargin: "-42% 0px -42% 0px", threshold: 0.01 });
+    section.querySelectorAll("[data-programme-step]").forEach(element => observer.observe(element));
     return () => observer.disconnect();
   }, []);
 
@@ -119,23 +135,30 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="programmes" className={s.programmes}>
+        <section id="programmes" className={s.programmes} ref={programmeSection}>
           <div className={s.section}>
             <div className={s.sectionHead} data-home-reveal><div><p className={s.eyebrow}>FOUR PATHS. ONE PERSONAL APPROACH.</p><h2>What brings<br /><em>you here?</em></h2></div><p>Begin with what matters to you. Explore the programmes, then talk through the right starting point together.</p></div>
-            <div className={s.tabs} role="tablist" aria-label="Explore nutrition programmes">
-              {programmeData.map((item, index) => <button key={item.slug} ref={el => { tabs.current[index] = el; }} type="button" role="tab" id={`programme-tab-${index}`} aria-controls="programme-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={event => {
-                let next = index;
-                if (event.key === "ArrowRight") next = (index + 1) % 4;
-                else if (event.key === "ArrowLeft") next = (index + 3) % 4;
-                else if (event.key === "Home") next = 0;
-                else if (event.key === "End") next = 3;
-                else return;
-                event.preventDefault(); setActive(next); tabs.current[next]?.focus();
-              }}><small>{item.number}</small>{item.title}</button>)}
-            </div>
-            <div id="programme-panel" role="tabpanel" aria-labelledby={`programme-tab-${active}`} tabIndex={0} className={s.programmePanel}>
-              <div className={s.programmePhoto}><HomePhoto src={images[active]} alt={`Illustrative whole foods for the ${programme.title} programme`} sizes="(max-width: 900px) calc(100vw - 40px), (max-width: 1244px) calc(50vw - 32px), 590px" /></div>
-              <div className={s.programmeTextGrid}>{programmeData.map((item, index) => <div key={item.slug} className={`${s.programmeCopy} ${active !== index ? s.inactiveProgramme : ""}`} aria-hidden={active !== index} inert={active !== index}><p className={s.eyebrow}>{item.eyebrow}</p><h3>{item.title}</h3><p>{item.description}</p><ul>{item.highlights.map(highlight => <li key={highlight}>{highlight}</li>)}</ul><Link href={`/programmes/${item.slug}`} className={s.programmeLink}>Explore {item.shortTitle} <span aria-hidden="true">↗</span></Link></div>)}</div>
+            <div className={s.programmeStory}>
+              <div className={s.programmeStorySticky}>
+                <div className={s.tabs} role="tablist" aria-label="Explore nutrition programmes">
+                  {programmeData.map((item, index) => <button key={item.slug} ref={el => { tabs.current[index] = el; }} type="button" role="tab" id={`programme-tab-${index}`} aria-controls="programme-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={event => {
+                    let next = index;
+                    if (event.key === "ArrowRight") next = (index + 1) % 4;
+                    else if (event.key === "ArrowLeft") next = (index + 3) % 4;
+                    else if (event.key === "Home") next = 0;
+                    else if (event.key === "End") next = 3;
+                    else return;
+                    event.preventDefault(); setActive(next); tabs.current[next]?.focus();
+                  }}><small>{item.number}</small>{item.title}</button>)}
+                </div>
+                <div key={programme.slug} id="programme-panel" role="tabpanel" aria-labelledby={`programme-tab-${active}`} tabIndex={0} className={s.programmePanel}>
+                  <div className={s.programmePhoto}><HomePhoto src={images[active]} alt={`Illustrative whole foods for the ${programme.title} programme`} sizes="(max-width: 900px) calc(100vw - 40px), (max-width: 1244px) calc(50vw - 32px), 590px" /></div>
+                  <div className={s.programmeTextGrid}>{programmeData.map((item, index) => <div key={item.slug} className={`${s.programmeCopy} ${active !== index ? s.inactiveProgramme : ""}`} aria-hidden={active !== index} inert={active !== index}><p className={s.eyebrow}>{item.eyebrow}</p><h3>{item.title}</h3><p>{item.description}</p><ul>{item.highlights.map(highlight => <li key={highlight}>{highlight}</li>)}</ul><Link href={`/programmes/${item.slug}`} className={s.programmeLink}>Explore {item.shortTitle} <span aria-hidden="true">↗</span></Link></div>)}</div>
+                </div>
+              </div>
+              <div className={s.programmeStorySteps} aria-hidden="true">
+                {programmeData.map((item, index) => <div key={item.slug} ref={el => { programmeSteps.current[index] = el; }} data-programme-step={index} className={s.programmeStoryStep} style={{ top: `${index * 70}vh` }} />)}
+              </div>
             </div>
             <p className={s.programmeHelp}>Unsure which path is right? <Link href="/consultation">Start with a conversation ↗</Link></p>
           </div>

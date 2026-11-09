@@ -97,10 +97,14 @@
 .tabs button > span { margin-left: auto; }
 .tabs button:hover { background: #e3ebdf; }
 .tabs button[aria-selected=true] { color: #164b47; border-bottom-color: #164b47; background: #e3ebdf; }
-.programmePanel { display: grid; grid-template-columns: 1fr 1fr; background: #fdfcf8; margin-top: 28px; min-height: 430px; border: 1px solid #dbe4dc; box-shadow: 0 22px 55px rgba(22,75,71,.08); }
-.programmePhoto { position: relative; overflow: hidden; background: #dce6d7; min-height: 330px; }
+.programmeStory { position: relative; width: 100vw; min-height: 280vh; margin-left: calc(50% - 50vw); }
+.programmeStorySticky { position: sticky; top: 108px; z-index: 2; width: 100vw; min-width: 0; }
+.programmeStorySteps { position: absolute; inset: 0; pointer-events: none; }
+.programmeStoryStep { position: absolute; right: 0; left: 0; height: 70vh; opacity: 0; pointer-events: none; }
+.programmePanel { display: grid; grid-template-columns: 1fr 1fr; width: 100%; min-height: clamp(520px, 64svh, 680px); margin-top: 28px; background: #fdfcf8; border-block: 1px solid #dbe4dc; box-shadow: 0 22px 55px rgba(22,75,71,.08); animation: programme-slide-in .6s cubic-bezier(.22,.8,.24,1) both; }
+.programmePhoto { position: relative; overflow: hidden; background: #dce6d7; min-height: 330px; animation: programme-photo-in .7s cubic-bezier(.22,.8,.24,1) both; }
 .programmeTextGrid { display: grid; min-width: 0; }
-.programmeCopy { grid-area: 1 / 1; padding: 42px 48px; animation: arrive .45s ease both; }
+.programmeCopy { grid-area: 1 / 1; align-self: center; padding: 42px 48px; animation: programme-copy-in .55s cubic-bezier(.22,.8,.24,1) .08s both; }
 .inactiveProgramme { visibility: hidden; pointer-events: none; animation: none; }
 .programmeCopy h3 { font-size: 44px; letter-spacing: -.04em; line-height: 1.1; margin-bottom: 20px; }
 .programmeCopy > p:not(.eyebrow) { color: #5e716b; }
@@ -172,6 +176,9 @@
 .close .button { margin-top: 12px; }
 .revealed { animation: arrive .65s ease both; }
 @keyframes arrive { from { transform: translateY(8px); } to { transform: none; } }
+@keyframes programme-slide-in { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes programme-photo-in { from { opacity: .25; transform: scale(1.035); } to { opacity: 1; transform: scale(1); } }
+@keyframes programme-copy-in { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
 .photoFallback { position: absolute; inset: 0; display: grid; place-items: center; background: #dce6d7; }
 .photoFallback img { position: static; }
 .loadingPhoto { opacity: 0; pointer-events: none; }
@@ -208,11 +215,16 @@
   .motif :global(.deepa-chakra-scene) { height: 200px; }
   .motif :global(.chakra-original) { width: 150px; height: 150px; }
   .sectionHead { grid-template-columns: 1fr; gap: 22px; }
+  /* Keep enough scroll runway for the final mobile slide and leave room for
+     the fixed booking bar so the panel can be read all the way to its end. */
+  .programmeStory { width: auto; min-height: 270vh; margin-left: 0; }
+  .programmeStorySticky { position: sticky; top: 76px; width: auto; padding-bottom: 92px; }
+  .programmeStoryStep { height: 60vh; }
   .tabs { grid-template-columns: 1fr 1fr; }
   .tabs button { min-height: 64px; }
   .tabs button[aria-selected=true] { background: #164b47; color: #ffffff; }
   .tabs button[aria-selected=true] small { color: #d3e7db; }
-  .programmePanel { grid-template-columns: 1fr; }
+  .programmePanel { grid-template-columns: 1fr; min-height: 0; border-inline: 1px solid #dbe4dc; }
   .programmePhoto { min-height: 260px; }
   .programmeCopy { padding: 30px 24px; }
   .programmeCopy h3 { font-size: 38px; }
