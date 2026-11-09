@@ -7089,6 +7089,11 @@ h2 {
   color: var(--m-coral);
 }
 
+.marketing-desktop-nav > a[aria-current="page"] {
+  color: var(--m-coral);
+  font-weight: 600;
+}
+
 .marketing-nav-button {
   gap: 8px;
   padding: 0;
@@ -8018,6 +8023,7 @@ h2 {
   .marketing-mobile-nav summary { display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 14px; border-bottom: 1px solid rgba(248, 247, 242, 0.23); color: var(--m-paper); font-family: var(--m-serif); font-size: clamp(1.9rem, 7vw, 3rem); font-weight: 300; letter-spacing: -0.05em; list-style: none; cursor: pointer; }
   .marketing-mobile-nav > a > span,
   .marketing-mobile-nav summary > span { margin-right: auto; color: var(--m-coral); font-family: var(--m-sans); font-size: 10px; letter-spacing: 0.12em; }
+  .marketing-mobile-nav > a[aria-current="page"] { color: var(--m-paper); background: rgba(248, 247, 242, 0.1); }
   .marketing-mobile-nav summary::-webkit-details-marker { display: none; }
   .marketing-mobile-nav summary b { color: var(--m-coral); font-family: var(--m-sans); font-size: 24px; font-weight: 300; }
   .marketing-mobile-programmes { display: grid; gap: 12px; padding: 13px 0 18px 33px; border-bottom: 1px solid rgba(248, 247, 242, 0.23); }

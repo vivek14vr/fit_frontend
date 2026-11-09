@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { MarketingHeader, MarketingFooter } from "./components/marketing-chrome";
 import { programmeData } from "./components/marketing-data";
 import s from "./homepage.module.css";
@@ -38,7 +38,6 @@ export default function Home() {
   const [active, setActive] = useState(0);
   const [step, setStep] = useState<number | null>(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const programmeSteps = useRef<(HTMLDivElement | null)[]>([]);
   const programmeSection = useRef<HTMLElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const programme = programmeData[active];
@@ -157,7 +156,7 @@ export default function Home() {
                 </div>
               </div>
               <div className={s.programmeStorySteps} aria-hidden="true">
-                {programmeData.map((item, index) => <div key={item.slug} ref={el => { programmeSteps.current[index] = el; }} data-programme-step={index} className={s.programmeStoryStep} style={{ top: `${index * 70}vh` }} />)}
+                {programmeData.map((item, index) => <div key={item.slug} data-programme-step={index} className={s.programmeStoryStep} style={{ "--programme-index": index } as CSSProperties} />)}
               </div>
             </div>
             <p className={s.programmeHelp}>Unsure which path is right? <Link href="/consultation">Start with a conversation ↗</Link></p>

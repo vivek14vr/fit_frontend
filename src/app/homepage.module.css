@@ -97,10 +97,10 @@
 .tabs button > span { margin-left: auto; }
 .tabs button:hover { background: #e3ebdf; }
 .tabs button[aria-selected=true] { color: #164b47; border-bottom-color: #164b47; background: #e3ebdf; }
-.programmeStory { position: relative; width: 100vw; min-height: 280vh; margin-left: calc(50% - 50vw); }
+.programmeStory { --programme-step-height: 70svh; --programme-story-extra: 0svh; position: relative; width: 100vw; min-height: calc((var(--programme-step-height) * 4) + var(--programme-story-extra)); margin-left: calc(50% - 50vw); }
 .programmeStorySticky { position: sticky; top: 108px; z-index: 2; width: 100vw; min-width: 0; }
 .programmeStorySteps { position: absolute; inset: 0; pointer-events: none; }
-.programmeStoryStep { position: absolute; right: 0; left: 0; height: 70vh; opacity: 0; pointer-events: none; }
+.programmeStoryStep { position: absolute; top: calc(var(--programme-index) * var(--programme-step-height)); right: 0; left: 0; height: var(--programme-step-height); opacity: 0; pointer-events: none; }
 .programmePanel { display: grid; grid-template-columns: 1fr 1fr; width: 100%; min-height: clamp(520px, 64svh, 680px); margin-top: 28px; background: #fdfcf8; border-block: 1px solid #dbe4dc; box-shadow: 0 22px 55px rgba(22,75,71,.08); animation: programme-slide-in .6s cubic-bezier(.22,.8,.24,1) both; }
 .programmePhoto { position: relative; overflow: hidden; background: #dce6d7; min-height: 330px; animation: programme-photo-in .7s cubic-bezier(.22,.8,.24,1) both; }
 .programmeTextGrid { display: grid; min-width: 0; }
@@ -217,9 +217,8 @@
   .sectionHead { grid-template-columns: 1fr; gap: 22px; }
   /* Keep enough scroll runway for the final mobile slide and leave room for
      the fixed booking bar so the panel can be read all the way to its end. */
-  .programmeStory { width: auto; min-height: 270vh; margin-left: 0; }
+  .programmeStory { --programme-step-height: 60svh; --programme-story-extra: 30svh; width: auto; margin-left: 0; }
   .programmeStorySticky { position: sticky; top: 76px; width: auto; padding-bottom: 92px; }
-  .programmeStoryStep { height: 60vh; }
   .tabs { grid-template-columns: 1fr 1fr; }
   .tabs button { min-height: 64px; }
   .tabs button[aria-selected=true] { background: #164b47; color: #ffffff; }

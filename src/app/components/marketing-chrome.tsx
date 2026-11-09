@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 function BrandMark() {
@@ -13,6 +14,7 @@ function BrandMark() {
 }
 
 export function MarketingHeader() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const mobileRef = useRef<HTMLDivElement>(null);
@@ -61,6 +63,9 @@ export function MarketingHeader() {
   const closeMenus = () => {
     setMobileOpen(false);
   };
+  const isCurrent = (href: string) => href === "/programmes"
+    ? pathname === href || pathname.startsWith("/programmes/")
+    : pathname === href;
 
   return (
     <header className="marketing-header">
@@ -74,10 +79,10 @@ export function MarketingHeader() {
         </Link>
 
         <nav className="marketing-desktop-nav" aria-label="Main navigation">
-          <Link href="/about">About Deepti</Link>
-          <Link href="/programmes" onClick={closeMenus}>Programmes</Link>
-          <Link href="/approach">How it works</Link>
-          <Link href="/contact">Contact</Link>
+          <Link href="/about" aria-current={isCurrent("/about") ? "page" : undefined}>About Deepti</Link>
+          <Link href="/programmes" onClick={closeMenus} aria-current={isCurrent("/programmes") ? "page" : undefined}>Programmes</Link>
+          <Link href="/approach" aria-current={isCurrent("/approach") ? "page" : undefined}>How it works</Link>
+          <Link href="/contact" aria-current={isCurrent("/contact") ? "page" : undefined}>Contact</Link>
         </nav>
 
         <div className="marketing-header-actions">
@@ -108,10 +113,10 @@ export function MarketingHeader() {
               <span>01 / 04</span>
             </div>
             <nav className="marketing-mobile-nav" aria-label="Mobile navigation links">
-              <Link href="/about" onClick={closeMenus}><span>01</span>About Deepti</Link>
-              <Link href="/programmes" onClick={closeMenus}><span>02</span>Programmes</Link>
-              <Link href="/approach" onClick={closeMenus}><span>03</span>How it works</Link>
-              <Link href="/contact" onClick={closeMenus}><span>04</span>Contact</Link>
+              <Link href="/about" onClick={closeMenus} aria-current={isCurrent("/about") ? "page" : undefined}><span>01</span>About Deepti</Link>
+              <Link href="/programmes" onClick={closeMenus} aria-current={isCurrent("/programmes") ? "page" : undefined}><span>02</span>Programmes</Link>
+              <Link href="/approach" onClick={closeMenus} aria-current={isCurrent("/approach") ? "page" : undefined}><span>03</span>How it works</Link>
+              <Link href="/contact" onClick={closeMenus} aria-current={isCurrent("/contact") ? "page" : undefined}><span>04</span>Contact</Link>
             </nav>
             <div className="marketing-mobile-actions">
               <Link className="marketing-mobile-primary" href="/consultation" onClick={closeMenus}>Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link>

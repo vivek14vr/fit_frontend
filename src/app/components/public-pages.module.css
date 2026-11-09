@@ -313,6 +313,7 @@
 .page :global(.contact-field-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .page :global(.contact-form label) { display: grid; gap: 8px; color: #203b39; font-weight: 600; }
 .page :global(.contact-form label > span) { font-size: 14px; }
+.page :global(.contact-required) { color: var(--home-haldi); font-weight: 700; }
 .page :global(.contact-form input:not([type="checkbox"])),
 .page :global(.contact-form textarea),
 .page :global(.contact-form select),
@@ -336,6 +337,7 @@
 .page :global(.contact-form-meta a) { color: var(--home-ink); text-decoration: underline; text-underline-offset: 3px; }
 .page :global(.contact-form-success) { display: grid; gap: 16px; padding: clamp(24px, 4vw, 38px); border: 1px solid var(--home-line); background: #e4ebe0; }
 .page :global(.contact-form-success h3) { max-width: 12ch; margin: 0; color: var(--home-ink); font: 300 clamp(38px, 4vw, 54px)/1.04 var(--font-written); letter-spacing: -.05em; }
+.page :global(.contact-form-success h3:focus) { outline: 3px solid var(--home-haldi); outline-offset: 6px; }
 .page :global(.contact-form-success > p:not(.home-section-label):not(.contact-form-meta)) { max-width: 520px; margin: 0; color: var(--home-muted); }
 .page :global(.contact-calendar-link) { justify-self: start; margin-top: 4px; }
 .page :global(.contact-edit-link) { justify-self: start; padding: 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--home-ink); font: 600 13px/1.4 var(--font-body); cursor: pointer; }
@@ -588,6 +590,7 @@
   .page :global(.public-detail-section) { padding: 54px 0; }
   .page :global(.home-feature-card) { min-height: 0; padding: 24px; }
   .page :global(.contact-field-grid) { grid-template-columns: 1fr; }
+  .page :global(.about-page-portrait) { aspect-ratio: 4 / 5; }
   .page :global(.contact-form-card) { padding: 24px; }
   .page :global(.contact-assessment-card) { padding: 24px; }
   .page :global(.contact-phone-field) { grid-template-columns: 1fr; }

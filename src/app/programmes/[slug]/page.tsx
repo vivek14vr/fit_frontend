@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MarketingFooter, MarketingHeader } from "@/app/components/marketing-chrome";
 import HomePhoto from "@/app/components/home-photo";
@@ -14,6 +15,20 @@ const programmeImages: Record<string, string> = {
 
 export function generateStaticParams() {
   return programmeData.map((programme) => ({ slug: programme.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const programme = getProgramme(slug);
+
+  if (!programme) {
+    return { title: "Programme not found | Deepti Sherawat" };
+  }
+
+  return {
+    title: `${programme.title} Programme | Deepti Sherawat`,
+    description: programme.description,
+  };
 }
 
 export default async function ProgrammeDetailPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import {
   ProgrammesPageContent,
   PublicPageLayout,
 } from "@/app/components/public-pages";
+
+export const metadata: Metadata = {
+  title: "Nutrition Programmes | Deepti Sherawat",
+  description:
+    "Explore personalised nutrition programmes for digestion, liver wellbeing, metabolic health and skin, shaped around real life.",
+};
 
 export default function ProgrammesPage() {
   return (
