@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./marketing-motion.css";
+import EntryLoader from "./components/entry-loader";
 
 export const metadata: Metadata = {
   title: "Deepti Sherawat | Ayurvedic & Functional Nutrition",
@@ -10,7 +12,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body>{children}</body>
+      <body>
+        <EntryLoader />
+        {children}
+      </body>
     </html>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import MarketingMotion from "./marketing-motion";
 
 function BrandMark() {
   return (
@@ -68,6 +69,8 @@ export function MarketingHeader() {
     : pathname === href;
 
   return (
+    <>
+    <MarketingMotion />
     <header className="marketing-header">
       <div className="marketing-header-inner home-shell" inert={mobileOpen}>
         <Link className="marketing-brand" href="/" aria-label="Deepti Sherawat home" onClick={closeMenus}>
@@ -127,6 +130,7 @@ export function MarketingHeader() {
         </div>
       ) : null}
     </header>
+    </>
   );
 }
 
