@@ -776,3 +776,28 @@
 .serviceDiscoveryInner { padding-bottom: 0; }
 .serviceWheelStage { width: 100%; padding-bottom: 90px; }
 @media (max-width: 600px) { .serviceWheelStage { padding-bottom: 60px; } }
+
+/* Keep fixed booking actions clear of the hero, interactive flower and closing CTA. */
+.mobileBooking[data-visible="false"],
+.page:has(:global(#mobile-menu)) .mobileBooking { display:none; }
+@media (max-width:600px) {
+ .hero { padding:40px 20px 88px; min-height:0; }
+ .heroCopy .eyebrow { font-size:10px; letter-spacing:.1em; }
+ .heroCopy .lede { font-size:16px; line-height:1.65; }
+ .heroCopy .heroNote { font-size:12px; line-height:1.5; }
+ .heroCopy .actions { align-items:stretch; }
+ .heroCopy .actions .button { justify-content:space-between; }
+ .aboutPortrait { height:auto; min-height:0; aspect-ratio:3 / 4; }
+ .aboutValues { grid-template-columns:1fr; gap:0; }
+ .aboutValues li { display:flex; align-items:center; gap:14px; }
+ .aboutValues span { margin:0; flex-shrink:0; }
+ .programmeCopy { padding:28px 20px; }
+ .tabs { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .tabs button { min-width:0; text-align:left; font-size:14px; }
+ .close h2 { font-size:clamp(48px,15vw,76px); }
+}
+@media (max-height:500px) and (max-width:900px) {
+ .hero { min-height:0; padding-block:36px 82px; }
+ .heroCopy h1 { font-size:clamp(48px,8vw,68px); }
+ .mobileBooking { display:none; }
+}

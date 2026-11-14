@@ -98,23 +98,21 @@ export default function PetalFlowerScene({ active }: { active: number }) {
         return mesh;
       });
       mount.appendChild(renderer.domElement);
-      let frame = 0, previous = 0, elapsed = 0, visible = false, hover = -1, lost = false;
+      let frame = 0, previous = 0, visible = false, hover = -1, lost = false;
       const draw = (now: number) => {
         frame = 0;
         if (disposed || !visible || document.hidden || lost) return;
         const dt = previous ? Math.min((now - previous) / 1000, .05) : 1 / 60;
         previous = now;
-        elapsed += dt;
         let unsettled = false;
         petals.forEach((petal, index) => {
 
-          const bloom = motion.matches ? 1 : Math.min(1, Math.max(0, (elapsed - index * .08) / .8));
-          const open = 1 - Math.pow(1 - bloom, 3);
-          const target = motion.matches ? 0 : (1 - open) * .65 + (hover === index ? -.06 : selection.current === index ? -.025 : 0);
-          petal.rotation.x += (target - petal.rotation.x) * (motion.matches ? 1 : 1 - Math.exp(-12 * dt));
+          // Keep the surface aligned with its SVG hit area at every zoom level.
+          // Depth comes from the sculpted crown and lift, rather than tilting the text surface.
+          petal.rotation.x = 0;
           const lift = motion.matches ? 0 : hover === index ? 5 : selection.current === index ? 2.5 : 0;
           petal.position.z += (lift-petal.position.z)*(motion.matches ? 1 : 1-Math.exp(-12*dt));
-          unsettled ||= bloom < 1 || Math.abs(target - petal.rotation.x) > .001 || Math.abs(lift-petal.position.z) > .01;
+          unsettled ||= Math.abs(lift-petal.position.z) > .01;
         });
         renderer.render(scene, camera);
         wheel.dataset.flowerReady = "true";
@@ -138,7 +136,7 @@ export default function PetalFlowerScene({ active }: { active: number }) {
       const observer = new IntersectionObserver(([entry]) => {
         visible = entry.isIntersecting;
         if (visible) schedule(); else { cancelAnimationFrame(frame); frame = 0; }
-      }, { threshold: .15 });
+      }, { threshold: 0 });
       const point = (event: Event) => {
         const button = event.target instanceof Element ? event.target.closest("[data-petal-index]") : null;
         hover = button ? Number(button.getAttribute("data-petal-index")) : -1;
@@ -149,7 +147,7 @@ export default function PetalFlowerScene({ active }: { active: number }) {
       const contextLost = (event: Event) => { event.preventDefault(); lost = true; delete wheel.dataset.flowerReady; wheel.closest("[data-discovery-flower]")?.removeAttribute("data-flower-ready"); cancelAnimationFrame(frame); frame = 0; };
       const contextRestored = () => { lost = false; schedule(); };
       resize.observe(mount);
-      observer.observe(wheel);
+      observer.observe(wheel.closest("[data-flower-experience]") ?? wheel);
       wheel.addEventListener("pointerover", point);
       wheel.addEventListener("focusin", point);
       wheel.addEventListener("pointerleave", leave);

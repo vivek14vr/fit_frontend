@@ -46,7 +46,8 @@ export default function ServicePetalWheel() {
       if (manual.current || motion.matches) return;
       const rect = host.getBoundingClientRect();
       const nav = host.firstElementChild as HTMLElement;
-      const start = innerWidth > 600 ? 110 : 86;
+      if (getComputedStyle(nav).position !== "sticky") return;
+      const start = parseFloat(getComputedStyle(nav).top) || 0;
       const distance = Math.max(1, host.offsetHeight - nav.offsetHeight);
       const progress = Math.max(0, Math.min(1, (start - rect.top) / distance));
       const ease = (value: number) => value*value*(3-2*value);
@@ -88,13 +89,13 @@ export default function ServicePetalWheel() {
   return <div ref={experience} className={n.experience} data-flower-experience>
     <nav className={n.navigation} aria-label="Explore Deepti’s services" data-scrolling={position.scrolling} data-expanded={visual.zoom>.85} style={{ "--path-color": item.color, "--wheel-angle": `${visual.angle}deg`, "--flower-zoom": visual.zoom } as CSSProperties}>
       <div className={n.flowerColumn}>
-        <div className={n.wheelTop}><span>{position.zoom>.65?"ONE PATH AT A TIME":"SIX WAYS TO BEGIN"}</span><span>0{current+1} / 06</span></div>
+        <div className={n.wheelTop}><span>{visual.zoom>.85?"ONE PATH AT A TIME":"SIX WAYS TO BEGIN"}</span><span>0{current+1} / 06</span></div>
         <div className={n.flowerFrame}><div className={`${s.logoWheel} ${n.wheel}`} data-discovery-flower>
           <svg className={n.orbit} viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" /><path d="M198 97 L194 100 L198 103" /></svg>
           <div className={n.rotor} data-flower-rotor>
             <PetalFlowerScene active={current} />
             <svg className={s.logoWheelArtwork} viewBox="0 0 200 200" role="group" aria-label="Interactive Deepa Chakra">
-              {wheelPaths.map((path,index) => <a key={path.title} href={path.href} role="button" aria-pressed={current===index} aria-label={`Preview ${path.title}`} data-petal-index={index} tabIndex={position.zoom>.65 && current!==index?-1:0} onClick={event=>select(event,index)} onKeyDown={event=>{
+              {wheelPaths.map((path,index) => <a key={path.title} href={path.href} role="button" aria-pressed={current===index} aria-label={`Preview ${path.title}`} data-petal-index={index} tabIndex={visual.zoom>.85 && current!==index?-1:0} onClick={event=>select(event,index)} onKeyDown={event=>{
                 if(event.key===" "){event.preventDefault();choose(index);}
                 if(event.key==="ArrowRight"||event.key==="ArrowLeft"){event.preventDefault();const next=(current+(event.key==="ArrowRight"?1:5))%6;choose(next);event.currentTarget.parentElement?.querySelector<SVGAElement>(`[data-petal-index="${next}"]`)?.focus();}
               }} className={`${s.logoPetalLink} ${n.petalLink}`} style={{"--petal-color":path.color,"--petal-angle":`${index*60}deg`} as CSSProperties} data-active={current===index}>
@@ -108,15 +109,15 @@ export default function ServicePetalWheel() {
             {wheelPaths.map((path,index) => {
               const angle = index * Math.PI / 3;
               return <article key={path.title} className={n.petalContent} data-petal-content={index} data-active={current===index} style={{left:`${(50+Math.sin(angle)*27.5).toFixed(4)}%`,top:`${(50-Math.cos(angle)*27.5).toFixed(4)}%`}}>
-                <h3><button type="button" aria-label={`Select ${path.title}`} aria-pressed={current===index} tabIndex={position.zoom>.65 && current!==index?-1:0} onClick={()=>choose(index)}>{path.title}</button></h3>
+                <h3><button type="button" aria-label={`Select ${path.title}`} aria-pressed={current===index} tabIndex={visual.zoom>.85 && current!==index?-1:0} onClick={()=>choose(index)}>{path.title}</button></h3>
                 <div className={n.petalDetails}><div><p>{path.description}</p><p className={n.petalDetail}>{path.detail}</p>
-                <a tabIndex={position.zoom>.65 && current===index?0:-1} href={path.href} aria-label={index===4?"Book a conversation":`Explore ${path.title}`}>{index===4?"Let’s talk":"Explore"} <span aria-hidden="true">↗</span></a></div></div>
+                <a tabIndex={visual.zoom>.85 && current===index?0:-1} href={path.href} aria-label={index===4?"Book a conversation":`Explore ${path.title}`}>{index===4?"Let’s talk":"Explore"} <span aria-hidden="true">↗</span></a></div></div>
               </article>;
             })}
           </div>
           <div className={n.core} aria-hidden="true"><Image src="/deepa-chakra-small.svg" alt="" width={60} height={60}/></div>
         </div></div>
-        <div className={n.controls}><button type="button" aria-label="Previous petal" onClick={()=>choose((current+5)%6)}>←</button><p>{position.zoom>.65?"Scroll to the next petal.":"Scroll to look closer."}<button className={n.overview} type="button" onClick={()=>{manual.current=true;setPosition({index:1,angle:0,zoom:0,scrolling:false});}}>View whole flower</button></p><button type="button" aria-label="Next petal" onClick={()=>choose((current+1)%6)}>→</button></div>
+        <div className={n.controls}><button type="button" aria-label="Previous petal" onClick={()=>choose((current+5)%6)}>←</button><p><span className={n.scrollHint}>{visual.zoom>.85?"Scroll to the next petal.":"Scroll to look closer."}</span><span className={n.manualHint}>Choose a petal to explore.</span><button className={n.overview} type="button" onClick={()=>{manual.current=true;setPosition({index:1,angle:0,zoom:0,scrolling:false});}}>View whole flower</button></p><button type="button" aria-label="Next petal" onClick={()=>choose((current+1)%6)}>→</button></div>
       </div>
       <p className={n.selectionStatus} role="status">Selected: {item.title}. Use the link inside its petal to explore.</p>
     </nav>

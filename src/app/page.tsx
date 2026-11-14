@@ -40,6 +40,7 @@ const metabolicSignals = [
 export default function Home() {
   const [active, setActive] = useState(0);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const [showMobileBooking, setShowMobileBooking] = useState(false);
   const [step, setStep] = useState<number | null>(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const programmeSection = useRef<HTMLElement>(null);
@@ -47,6 +48,19 @@ export default function Home() {
   const manualProgramme = useRef(false);
   const programme = programmeData[active];
   useHomeChoreography(root);
+
+  useEffect(() => {
+    const element = root.current;
+    if (!element) return;
+    const sections = Array.from(element.querySelectorAll<HTMLElement>('[data-transition-section="hero"], [data-transition-section="services"], [data-transition-section="close"], .marketing-footer'));
+    const visible = new Set<Element>(sections);
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target); });
+      setShowMobileBooking(visible.size === 0);
+    });
+    sections.forEach(section => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const section = programmeSection.current;
@@ -216,7 +230,7 @@ export default function Home() {
         <section className={s.close} data-home-reveal data-transition-section="close"><div className={s.section}><div className={s.closingFlower} data-close-logo><BrandFlowerMark /></div><p className={s.eyebrow}>ONE CONVERSATION. A THOUGHTFUL BEGINNING.</p><h2>Let’s begin<br /><em>with you.</em></h2><p>Bring your questions. We’ll explore the next step together.</p><Link href="/consultation" className={s.button}>Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link><p className={s.bookingNote}>Consultation options and fees are shown before you book.</p></div></section>
       </main>
       <MarketingFooter />
-      <div className={s.mobileBooking}><Link href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div>
+      <div className={s.mobileBooking} data-visible={showMobileBooking}><Link href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div>
     </div>
   );
 }

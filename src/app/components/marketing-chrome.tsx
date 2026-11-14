@@ -39,7 +39,7 @@ export function MarketingHeader() {
     const previousFocus = document.activeElement as HTMLElement | null;
     const menuToggle = toggleRef.current;
     document.body.style.overflow = "hidden";
-    mobileRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    mobileRef.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
     const trapFocus = (event: KeyboardEvent) => {
       if (event.key !== "Tab") return;
       const items = Array.from(mobileRef.current?.querySelectorAll<HTMLElement>('a[href], button, summary') ?? [])
@@ -57,7 +57,7 @@ export function MarketingHeader() {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", trapFocus);
       breakpoint.removeEventListener("change", closeOnDesktop);
-      (previousFocus ?? menuToggle)?.focus();
+      (menuToggle ?? previousFocus)?.focus({ preventScroll: true });
     };
   }, [mobileOpen]);
 
@@ -107,6 +107,7 @@ export function MarketingHeader() {
         </button>
       </div>
 
+    </header>
       {mobileOpen ? (
         <div ref={mobileRef} className="marketing-mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
           <div className="marketing-mobile-menu-inner home-shell">
@@ -129,7 +130,6 @@ export function MarketingHeader() {
           </div>
         </div>
       ) : null}
-    </header>
     </>
   );
 }

@@ -10039,3 +10039,32 @@ h2 {
     width: 100%;
   }
 }
+
+/* The mobile dialog is a sibling of the filtered sticky header, so fixed positioning uses the viewport. */
+@media (max-width:900px) {
+ .marketing-mobile-menu { z-index:100; padding-bottom:env(safe-area-inset-bottom); }
+ .marketing-header-inner.home-shell { width:calc(100% - 40px); padding-inline:0; }
+ .marketing-mobile-menu-inner.home-shell { width:min(680px,calc(100% - 40px)); padding-inline:0; }
+ .marketing-mobile-note { line-height:1.4; }
+}
+@media (max-width:600px) {
+ .marketing-header-inner.home-shell { width:calc(100% - 32px); gap:12px; }
+ .marketing-brand { min-width:0; }
+ .marketing-brand-mark { flex-shrink:0; }
+ .marketing-brand-copy { min-width:0; }
+ .marketing-brand-copy small { max-width:23ch; line-height:1.4; }
+ .marketing-mobile-menu-inner.home-shell { padding-top:16px; padding-bottom:24px; }
+ .marketing-mobile-close { margin-bottom:16px; }
+ .marketing-mobile-nav > a { min-height:60px; font-size:clamp(26px,7vw,36px); }
+ .marketing-mobile-actions { margin-top:24px; }
+}
+@media (max-height:500px) and (max-width:900px) {
+ .marketing-mobile-menu-inner.home-shell { padding-block:12px 24px; }
+ .marketing-mobile-menu-topline, .marketing-mobile-note { display:none; }
+ .marketing-mobile-nav { padding-top:0; }
+ .marketing-mobile-nav > a { min-height:48px; font-size:26px; }
+}
+@media (min-width:901px) {
+ .marketing-header-inner.home-shell { width:min(1180px,calc(100% - 48px)); padding-inline:0; }
+ .marketing-desktop-nav > a { white-space:nowrap; }
+}

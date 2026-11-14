@@ -1,5 +1,5 @@
 .experience { position:relative; width:100%; }
-.navigation { --turn-duration:850ms; --frame-height:calc(100svh - 235px); --overview-size:min(var(--frame-height),calc(100vw - 64px)); --focus-size:calc(var(--frame-height)*3.6); --flower-size:calc(var(--overview-size)*(1 - var(--flower-zoom)) + var(--focus-size)*var(--flower-zoom)); position:relative; width:100%; }
+.navigation { --turn-duration:850ms; --frame-height:max(420px,calc(100svh - 235px)); --overview-size:min(var(--frame-height),calc(100vw - 64px)); --focus-size:calc(var(--frame-height)*3.6); --flower-size:calc(var(--overview-size)*(1 - var(--flower-zoom)) + var(--focus-size)*var(--flower-zoom)); position:relative; width:100%; }
 .navigation[data-scrolling="true"] { --turn-duration:180ms; }
 .flowerColumn { position:relative; min-width:0; }
 .wheelTop { display:flex; justify-content:space-between; max-width:800px; margin:0 auto 14px; padding-inline:24px; color:#647265; font-size:10px; letter-spacing:.18em; }
@@ -13,7 +13,7 @@
 .navigation[data-expanded="true"] .petalLink[data-active="false"] { pointer-events:none; }
 .orbit { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; fill:none; stroke:#a89d7c60; stroke-width:.3; opacity:calc(1 - var(--flower-zoom)); }
 .orbit path { fill:#164b47; stroke:none; }
-.petalContent { position:absolute; z-index:3; width:min(calc(var(--flower-size)*(.17 + .07*var(--flower-zoom))),calc(100vw - 100px),560px); transform:translate(-50%,-50%) rotate(calc(-1 * var(--wheel-angle))); transition:opacity .35s; text-align:center; color:#fffdf4; pointer-events:none; }
+.petalContent { position:absolute; z-index:3; width:min(calc(var(--flower-size)*(.17 + .07*var(--flower-zoom))),calc(100vw - 64px),560px); transform:translate(-50%,-50%) rotate(calc(-1 * var(--wheel-angle))); transition:opacity .35s; text-align:center; color:#fffdf4; pointer-events:none; }
 .petalContent[data-active="false"] { opacity:calc(1 - var(--flower-zoom)); }
 .navigation[data-expanded="true"] .petalContent[data-active="false"] { visibility:hidden; }
 .petalContent[data-petal-content="1"] { color:#123e3b; }
@@ -30,20 +30,41 @@
 .controls { position:relative; z-index:4; display:flex; align-items:center; justify-content:center; gap:24px; margin-top:14px; }
 .controls > button { display:grid; place-items:center; width:44px; height:44px; border:1px solid #b9bea9; border-radius:50%; background:transparent; color:#164b47; font-size:20px; cursor:pointer; }
 .controls > button:hover { background:#fffaf0; }
-.controls p { color:#657267; font-size:11px; margin:0!important; text-align:center; }
-.overview { display:block; margin:4px auto 0; padding:4px 6px; background:none; border:0; color:#164b47; text-decoration:underline; text-underline-offset:3px; font:inherit; cursor:pointer; }
+.controls p { color:#657267; font-size:12px; line-height:1.5; margin:0!important; text-align:center; }
+.overview { display:block; margin:0 auto; min-height:44px; padding:8px 6px; background:none; border:0; color:#164b47; text-decoration:underline; text-underline-offset:3px; font:inherit; cursor:pointer; }
 .navigation :is(button,a):focus-visible { outline:2px solid currentColor; outline-offset:4px; }
 .selectionStatus { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 @media(prefers-reduced-motion:no-preference) { .experience { min-height:calc(100svh + 2000px); } .navigation { position:sticky; top:110px; } }
+@media(max-width:900px) {
+ .navigation { --frame-height:max(420px,calc(100svh - 300px)); --overview-size:min(var(--frame-height),calc(100vw - 32px)); top:86px; }
+}
 @media(max-width:600px) {
- .navigation { --frame-height:calc(100svh - 280px); --overview-size:min(var(--frame-height),calc(100vw - 32px)); top:86px; }
  .wheelTop { padding-inline:16px; font-size:9px; }
  .petalContent h3 { font-size:clamp(10px,calc(var(--flower-size)*.026),32px); }
  .petalContent p { font-size:14px; line-height:1.45; margin-top:12px!important; }
  .controls { gap:16px; }
- .controls p { font-size:10px; }
+ .controls p { font-size:12px; }
 }
 @media(prefers-reduced-motion:reduce) { .navigation * { animation:none!important; transition:none!important; } }
 
 .petalContent .petalDetail { font-size:clamp(11px,calc(var(--flower-size)*.007),14px); line-height:1.4; margin:0 0 12px!important; opacity:.9; }
-@media(max-width:600px) { .petalContent .petalDetail { font-size:10px; margin-bottom:4px!important; } .petalContent p { font-size:13px; line-height:1.4; } }
+@media(max-width:600px) { .petalContent .petalDetail { font-size:12px; margin-bottom:8px!important; } .petalContent p { font-size:15px; line-height:1.5; } }
+
+/* Short windows need ordinary page scrolling so no part of a petal is trapped below the viewport. */
+.manualHint { display:none; }
+@media (max-height:700px), (prefers-reduced-motion:reduce) {
+ .experience { min-height:0; }
+ .navigation { position:relative; top:auto; }
+ .scrollHint { display:none; }
+ .manualHint { display:inline; }
+ .flowerColumn { display:flex; flex-direction:column; }
+ .wheelTop { order:0; width:100%; }
+ .controls { order:1; margin:0 0 12px; }
+ .flowerFrame { order:2; }
+}
+@media (max-height:700px) {
+ .navigation { --frame-height:max(360px,calc(100svh - 200px)); }
+}
+.navigation { --focus-size:max(1600px,calc(var(--frame-height)*3.6)); }
+.petalContent h3 button { max-width:100%; white-space:normal; text-wrap:balance; }
+.petalContent[data-petal-content="2"] h3 { max-width:10ch; margin-inline:auto!important; }
