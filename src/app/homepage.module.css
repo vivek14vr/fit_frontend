@@ -771,3 +771,8 @@
 .videoPosterCaption { position: absolute; bottom: 36px; left: 40px; font: 400 clamp(26px,3.6vw,50px)/1.15 var(--font-written); }
 .videoPosterCaption small { display: block; margin-top: 20px; font: 500 10px/1.4 var(--font-body); letter-spacing: .18em; }
 @media(max-width:600px) { .videoFrame { aspect-ratio: 4/3; } .videoPlay { width: 56px; height: 56px; top: 33%; font-size: 18px; } .videoPosterCaption { left: 22px; bottom: 22px; font-size: 27px; } .videoPosterCaption small { margin-top: 12px; font-size: 8px; } }
+
+/* The flower clips at the viewport edge; only its introduction uses the reading-width container. */
+.serviceDiscoveryInner { padding-bottom: 0; }
+.serviceWheelStage { width: 100%; padding-bottom: 90px; }
+@media (max-width: 600px) { .serviceWheelStage { padding-bottom: 60px; } }

@@ -129,8 +129,8 @@ export default function Home() {
               <h2 id="service-discovery-title">Your own way<br /><em>to feel more you.</em></h2>
               <p>Every person arrives with a different question. Choose a petal, discover your path, and take the next step when you feel ready.</p>
             </div>
-            <div className={s.serviceWheelStage}><ServicePetalWheel /></div>
           </div>
+          <div className={s.serviceWheelStage}><ServicePetalWheel /></div>
         </section>
 
         <section id="about-deepti" className={s.about} data-transition-section="about">

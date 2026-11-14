@@ -37,7 +37,7 @@
 @media(prefers-reduced-motion:no-preference) { .experience { min-height:calc(100svh + 2000px); } .navigation { position:sticky; top:110px; } }
 @media(max-width:600px) {
  .navigation { --frame-height:calc(100svh - 280px); --overview-size:min(var(--frame-height),calc(100vw - 32px)); top:86px; }
- .wheelTop { padding:0; font-size:9px; }
+ .wheelTop { padding-inline:16px; font-size:9px; }
  .petalContent h3 { font-size:clamp(10px,calc(var(--flower-size)*.026),32px); }
  .petalContent p { font-size:14px; line-height:1.45; margin-top:12px!important; }
  .controls { gap:16px; }

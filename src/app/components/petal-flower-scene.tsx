@@ -125,7 +125,16 @@ export default function PetalFlowerScene({ active }: { active: number }) {
         if (!frame && visible && !document.hidden && !lost) { previous = 0; frame = requestAnimationFrame(draw); }
       };
       wake.current = schedule;
-      const resize = new ResizeObserver(() => { const size = Math.min(1100, Math.round(mount.clientWidth)); renderer.setSize(size, size, false); schedule(); });
+      // Keep the drawing buffer stable during the zoom instead of reallocating it every frame.
+      let renderSize = 0;
+      const resize = new ResizeObserver(() => {
+        const size = Math.min(1800, Math.round(Math.max(innerWidth, innerHeight) * 1.2));
+        if (size !== renderSize) {
+          renderSize = size;
+          renderer.setSize(size, size, false);
+          schedule();
+        }
+      });
       const observer = new IntersectionObserver(([entry]) => {
         visible = entry.isIntersecting;
         if (visible) schedule(); else { cancelAnimationFrame(frame); frame = 0; }
