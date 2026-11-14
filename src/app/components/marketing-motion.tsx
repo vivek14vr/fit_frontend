@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import SectionTransitionScene from "./section-transition-scene";
@@ -10,11 +9,11 @@ const publicRoute = (path: string) => path === "/" || /^\/(about|approach|progra
 /** Shared choreography for every public page; normal navigation remains native. */
 export default function MarketingMotion() {
   const pathname = usePathname();
-  const curtain = useRef<HTMLDivElement>(null);
+  const marker = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!publicRoute(pathname) || pathname === "/") return;
-    const root = curtain.current?.closest<HTMLElement>(".marketing-home, .public-page, .marketing-programme-detail");
+    const root = marker.current?.closest<HTMLElement>(".marketing-home, .public-page, .marketing-programme-detail");
     if (!root) return;
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
@@ -27,13 +26,8 @@ export default function MarketingMotion() {
     };
     const entrance = () => {
       root.dataset.motionReady = "true";
-      const logo = curtain.current?.querySelector("img");
-      if (logo) play(logo, [{ opacity: 0, rotate: "-40deg", scale: ".85" }, { opacity: 1, offset: .25 }, { opacity: 0, rotate: "30deg", scale: "1" }], { duration: 850 });
-      curtain.current?.querySelectorAll(".site-petal-curtain__leaf").forEach((leaf, index) => {
-        play(leaf, [{ transform: "translateY(0)" }, { transform: "translateY(-110%)" }], { duration: 850, delay: index * 45, easing: "cubic-bezier(.76,0,.24,1)" });
-      });
       const hero = root.querySelector("h1");
-      if (hero) play(hero, [{ clipPath: "inset(0 0 100% 0)", transform: "translateY(32px)", opacity: .2 }, { clipPath: "inset(0 0 0% 0)", transform: "translateY(0)", opacity: 1 }], { duration: 1100, delay: 220, easing: "cubic-bezier(.22,1,.36,1)" });
+      if (hero) play(hero, [{ clipPath: "inset(0 0 100% 0)", transform: "translateY(32px)", opacity: .2 }, { clipPath: "inset(0 0 0% 0)", transform: "translateY(0)", opacity: 1 }], { duration: 550, delay: 0, easing: "cubic-bezier(.22,1,.36,1)" });
     };
     entrance();
     const candidates = root.querySelectorAll<HTMLElement>("section h2, section article, .public-detail-heading, .contact-form-card, .contact-assessment-card, .marketing-detail-highlights > div, .marketing-footer-bottom");
@@ -116,10 +110,7 @@ export default function MarketingMotion() {
 
   if (!publicRoute(pathname) || pathname === "/") return null;
   return <>
-    <div ref={curtain} className="site-petal-curtain" aria-hidden="true">
-      {Array.from({ length: 6 }, (_, index) => <span className="site-petal-curtain__leaf" key={index} />)}
-      <Image src="/deepa-chakra-small.svg" alt="" width={64} height={64} className="site-petal-curtain__logo" />
-    </div>
+    <span ref={marker} hidden aria-hidden="true" />
     <SectionTransitionScene key={pathname} />
   </>;
 }

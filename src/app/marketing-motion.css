@@ -1,12 +1,4 @@
 /* Shared motion vocabulary for public pages. Content remains visible without JS. */
-.site-petal-curtain { position: fixed; z-index: 95; inset: 0; display: flex; pointer-events: none; overflow: hidden; }
-.site-petal-curtain__leaf { flex: 1; height: 115%; border-radius: 0 0 48% 48%; background: #0e4a4c; transform: translateY(-110%); }
-.site-petal-curtain__leaf:nth-child(2) { background: #3f6b55; }
-.site-petal-curtain__leaf:nth-child(3) { background: #c9922e; }
-.site-petal-curtain__leaf:nth-child(4) { background: #9e2f28; }
-.site-petal-curtain__leaf:nth-child(5) { background: #8a6a3e; }
-.site-petal-curtain__leaf:nth-child(6) { background: #317a70; }
-.site-petal-curtain__logo { position: absolute; top: 45%; left: calc(50% - 32px); opacity: 0; }
 [data-motion-ready] .marketing-header { transition: background-color 350ms, box-shadow 350ms; }
 [data-motion-ready] .marketing-header[data-scrolled="true"] { background: rgba(253,252,248,.95); box-shadow: 0 8px 35px rgba(14,74,76,.08); }
 [data-motion-ready] :is(.marketing-desktop-nav a,.marketing-footer-links a) { position: relative; }
@@ -20,6 +12,5 @@
   [data-motion-ready] .programme-landing-card img { transition: scale 650ms cubic-bezier(.22,1,.36,1); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .site-petal-curtain { display: none; }
   [data-motion-ready] *, [data-motion-ready] *::before, [data-motion-ready] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }

@@ -56,9 +56,9 @@ export default function PetalFlowerScene({ active }: { active: number }) {
 
       // Local petal coordinates: the stem is at (0, 0), all rotations share it.
       const shape = new T.Shape();
-      shape.moveTo(0, 26);
-      shape.bezierCurveTo(14, 34, 18, 50, 0, 66);
-      shape.bezierCurveTo(-18, 50, -14, 34, 0, 26);
+      shape.moveTo(0, 22);
+      shape.bezierCurveTo(30, 34, 34, 62, 0, 85);
+      shape.bezierCurveTo(-34, 62, -30, 34, 0, 22);
       const geometry = new T.ExtrudeGeometry(shape, { depth: 4, bevelEnabled: true, bevelThickness: .8, bevelSize: .7, bevelSegments: 5, steps: 1, curveSegments: 48 });
       // A dense indexed surface gives each petal a continuous ceramic crown.
       const surface = new T.BufferGeometry();
@@ -66,8 +66,8 @@ export default function PetalFlowerScene({ active }: { active: number }) {
       const rows = 40, columns = 24;
       for (let row = 0; row <= rows; row++) {
         const t = row / rows, u = 1 - t;
-        const width = 3*u*u*t*14 + 3*u*t*t*18;
-        const y = u*u*u*26 + 3*u*u*t*34 + 3*u*t*t*50 + t*t*t*66;
+        const width = 3*u*u*t*30 + 3*u*t*t*34;
+        const y = u*u*u*22 + 3*u*u*t*34 + 3*u*t*t*62 + t*t*t*85;
         for (let column = 0; column <= columns; column++) {
           const across = 2*column/columns - 1;
           points.push(width*across,y,4.8 + Math.sin(Math.PI*t)*(1-across*across)*3.5);
@@ -107,9 +107,10 @@ export default function PetalFlowerScene({ active }: { active: number }) {
         elapsed += dt;
         let unsettled = false;
         petals.forEach((petal, index) => {
+
           const bloom = motion.matches ? 1 : Math.min(1, Math.max(0, (elapsed - index * .08) / .8));
           const open = 1 - Math.pow(1 - bloom, 3);
-          const target = motion.matches ? 0 : (1 - open) * .65 + (hover === index ? -.24 : selection.current === index ? -.12 : .045);
+          const target = motion.matches ? 0 : (1 - open) * .65 + (hover === index ? -.06 : selection.current === index ? -.025 : 0);
           petal.rotation.x += (target - petal.rotation.x) * (motion.matches ? 1 : 1 - Math.exp(-12 * dt));
           const lift = motion.matches ? 0 : hover === index ? 5 : selection.current === index ? 2.5 : 0;
           petal.position.z += (lift-petal.position.z)*(motion.matches ? 1 : 1-Math.exp(-12*dt));
@@ -117,13 +118,14 @@ export default function PetalFlowerScene({ active }: { active: number }) {
         });
         renderer.render(scene, camera);
         wheel.dataset.flowerReady = "true";
+        wheel.closest("[data-discovery-flower]")?.setAttribute("data-flower-ready", "true");
         if (unsettled) frame = requestAnimationFrame(draw);
       };
       const schedule = () => {
         if (!frame && visible && !document.hidden && !lost) { previous = 0; frame = requestAnimationFrame(draw); }
       };
       wake.current = schedule;
-      const resize = new ResizeObserver(() => { renderer.setSize(mount.clientWidth, mount.clientHeight, false); schedule(); });
+      const resize = new ResizeObserver(() => { const size = Math.min(1100, Math.round(mount.clientWidth)); renderer.setSize(size, size, false); schedule(); });
       const observer = new IntersectionObserver(([entry]) => {
         visible = entry.isIntersecting;
         if (visible) schedule(); else { cancelAnimationFrame(frame); frame = 0; }
@@ -135,7 +137,7 @@ export default function PetalFlowerScene({ active }: { active: number }) {
       };
       const leave = () => { hover = -1; schedule(); };
       const visibility = () => { cancelAnimationFrame(frame); frame = 0; schedule(); };
-      const contextLost = (event: Event) => { event.preventDefault(); lost = true; delete wheel.dataset.flowerReady; cancelAnimationFrame(frame); frame = 0; };
+      const contextLost = (event: Event) => { event.preventDefault(); lost = true; delete wheel.dataset.flowerReady; wheel.closest("[data-discovery-flower]")?.removeAttribute("data-flower-ready"); cancelAnimationFrame(frame); frame = 0; };
       const contextRestored = () => { lost = false; schedule(); };
       resize.observe(mount);
       observer.observe(wheel);
@@ -156,7 +158,7 @@ export default function PetalFlowerScene({ active }: { active: number }) {
         document.removeEventListener("visibilitychange", visibility); motion.removeEventListener("change", schedule);
         renderer.domElement.removeEventListener("webglcontextlost", contextLost);
         renderer.domElement.removeEventListener("webglcontextrestored", contextRestored);
-        delete wheel.dataset.flowerReady;
+        delete wheel.dataset.flowerReady; wheel.closest("[data-discovery-flower]")?.removeAttribute("data-flower-ready");
         geometry.dispose(); surface.dispose(); materials.flat().forEach(material => material.dispose()); shadowGeometry.dispose(); shadowMaterial.dispose(); renderer.dispose(); renderer.domElement.remove();
       };
     }).catch(() => { release(); });

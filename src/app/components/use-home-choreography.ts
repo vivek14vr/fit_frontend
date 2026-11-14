@@ -38,10 +38,6 @@ export function useHomeChoreography(root: RefObject<HTMLDivElement | null>) {
       gsap.fromTo(select("[data-discovery-curve]"),
         { attr: { d: "M0 120 C260 120 290 0 600 0 C910 0 940 120 1200 120 L1200 160 L0 160 Z" } },
         { attr: { d: "M0 30 C260 0 290 80 600 80 C910 80 940 0 1200 30 L1200 160 L0 160 Z" }, ease: "none", scrollTrigger: { trigger: discovery, start: "top bottom", end: "top 25%", scrub: .7 } });
-      gsap.fromTo(select("[data-discovery-flower]"), { scale: .82, rotation: -22 }, {
-        scale: 1, rotation: 0, ease: "power2.out",
-        scrollTrigger: { trigger: select("[data-discovery-flower]")[0], start: "top 95%", end: "center 65%", scrub: .5 },
-      });
       gsap.fromTo(discovery, { backgroundColor: "#faf6ed" }, { backgroundColor: "#f1eadb", ease: "none", scrollTrigger: { trigger: discovery, start: "top bottom", end: "center center", scrub: .6 } });
       gsap.fromTo(select("[data-discovery-curve]"), { fill: "#faf6ed" }, { fill: "#f1eadb", ease: "none", scrollTrigger: { trigger: discovery, start: "top bottom", end: "center center", scrub: .6 } });
 
