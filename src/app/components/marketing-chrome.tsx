@@ -39,11 +39,16 @@ export function MarketingHeader() {
     const previousFocus = document.activeElement as HTMLElement | null;
     const menuToggle = toggleRef.current;
     document.body.style.overflow = "hidden";
-    mobileRef.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
+    menuToggle?.focus({ preventScroll: true });
+    const header = menuToggle?.closest("header");
+    const background = Array.from(header?.parentElement?.children ?? [])
+      .filter((node): node is HTMLElement => node instanceof HTMLElement && node !== header && node !== mobileRef.current)
+      .map(node => ({ node, inert: node.inert }));
+    background.forEach(({ node }) => { node.inert = true; });
     const trapFocus = (event: KeyboardEvent) => {
       if (event.key !== "Tab") return;
-      const items = Array.from(mobileRef.current?.querySelectorAll<HTMLElement>('a[href], button, summary') ?? [])
-        .filter((element) => element.getClientRects().length > 0);
+      const items = [menuToggle, ...Array.from(mobileRef.current?.querySelectorAll<HTMLElement>('a[href], button, summary') ?? [])]
+        .filter((element): element is HTMLElement => Boolean(element && element.getClientRects().length > 0));
       const first = items[0];
       const last = items[items.length - 1];
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
@@ -55,6 +60,7 @@ export function MarketingHeader() {
     document.addEventListener("keydown", trapFocus);
     return () => {
       document.body.style.overflow = previousOverflow;
+      background.forEach(({ node, inert }) => { node.inert = inert; });
       document.removeEventListener("keydown", trapFocus);
       breakpoint.removeEventListener("change", closeOnDesktop);
       (menuToggle ?? previousFocus)?.focus({ preventScroll: true });
@@ -72,8 +78,8 @@ export function MarketingHeader() {
     <>
     <MarketingMotion />
     <header className="marketing-header">
-      <div className="marketing-header-inner home-shell" inert={mobileOpen}>
-        <Link className="marketing-brand" href="/" aria-label="Deepti Sherawat home" onClick={closeMenus}>
+      <div className="marketing-header-inner home-shell">
+        <Link className="marketing-brand" inert={mobileOpen} href="/" aria-label="Deepti Sherawat home" onClick={closeMenus}>
           <BrandMark />
           <span className="marketing-brand-copy">
             <strong>DEEPTI SHERAWAT</strong>
@@ -109,9 +115,8 @@ export function MarketingHeader() {
 
     </header>
       {mobileOpen ? (
-        <div ref={mobileRef} className="marketing-mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+        <div ref={mobileRef} className="marketing-mobile-menu" id="mobile-menu" role="region" aria-label="Mobile navigation">
           <div className="marketing-mobile-menu-inner home-shell">
-            <button type="button" className="marketing-mobile-close" onClick={closeMenus}>Close menu ×</button>
             <div className="marketing-mobile-menu-topline">
               <span>THE DEEPA CHAKRA</span>
               <span>01 / 04</span>

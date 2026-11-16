@@ -58,12 +58,12 @@ export default function ContactEnquiryForm() {
         <p className="home-section-label">NEXT STEP</p>
         <h3 ref={successHeadingRef} tabIndex={-1}>Your conversation can begin here.</h3>
         <p>
-          Your form is complete on this page. Choose a time that works for you using the booking calendar below.
+          Choose a time that works for you in the booking calendar. It opens in a new tab.
         </p>
         <a className="home-button home-button-primary contact-calendar-link" href={BOOKING_LINKS[region]} target="_blank" rel="noopener noreferrer">
           Choose a time with Deepti <span aria-hidden="true">↗</span>
         </a>
-        <p className="contact-form-meta">This static form does not store submissions. Please keep a note of the details you shared if you need to refer back to them.</p>
+        <p className="contact-form-meta">Your notes stay on this page and are not sent to Deepti. Please share relevant details when you book.</p>
         <button className="contact-edit-link" type="button" onClick={() => setSubmitted(false)}>
           Edit my details
         </button>
@@ -91,11 +91,11 @@ export default function ContactEnquiryForm() {
         </select>
         <small id="contact-booking-region-help">Your booking calendar will match this selection.</small>
       </label>
-      <label htmlFor="contact-whatsapp"><span>WhatsApp number</span><div className="contact-phone-field"><select name="countryCode" value={countryCode} aria-label="Country code" onChange={event => setCountryCode(event.target.value)}><option value="+1">USA (+1)</option><option value="+91">India (+91)</option><option value="+44">UK (+44)</option><option value="+61">Australia (+61)</option><option value="+1-CA">Canada (+1)</option></select><input id="contact-whatsapp" name="whatsapp" type="tel" autoComplete="tel" placeholder="Your number" defaultValue={draft.whatsapp} aria-describedby="contact-whatsapp-help" /></div><small id="contact-whatsapp-help">Deepti’s team will contact you on this number if needed.</small></label>
+      <label htmlFor="contact-whatsapp"><span>WhatsApp number</span><div className="contact-phone-field"><select name="countryCode" value={countryCode} aria-label="Country code" onChange={event => setCountryCode(event.target.value)}><option value="+1">USA (+1)</option><option value="+91">India (+91)</option><option value="+44">UK (+44)</option><option value="+61">Australia (+61)</option><option value="+1-CA">Canada (+1)</option></select><input id="contact-whatsapp" name="whatsapp" type="tel" autoComplete="tel" placeholder="Your number" defaultValue={draft.whatsapp} aria-describedby="contact-whatsapp-help" /></div><small id="contact-whatsapp-help">Optional. Add your preferred number to your notes for the consultation.</small></label>
       <label htmlFor="contact-message"><span>What would you like help with? <span className="contact-required" aria-hidden="true">*</span></span><textarea id="contact-message" name="message" rows={5} placeholder="Tell us a little about what brings you here." defaultValue={draft.message} required /></label>
       <label className="contact-consent"><input name="consent" type="checkbox" required /><span>I understand this is an enquiry. Any consultation, programme or fee will be discussed separately. <span className="contact-required" aria-hidden="true">*</span></span></label>
       <button className="home-button home-button-primary contact-submit" type="submit">Continue to booking <span aria-hidden="true">↗</span></button>
-      <p className="contact-form-meta">This static page does not send or store the form data yet. The booking link appears after you submit the form.</p>
+      <p className="contact-form-meta">These details stay on this page and are not sent to Deepti. Continue to choose a time in the booking calendar.</p>
     </form>
   );
 }

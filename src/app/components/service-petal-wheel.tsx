@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Image from "next/image";
 import PetalFlowerScene from "./petal-flower-scene";
 import { wheelPaths } from "./service-wheel-data";
@@ -62,6 +62,7 @@ export default function ServicePetalWheel() {
     const scroll = () => { schedule(); };
     const resume = () => { manual.current = false; schedule(); };
     const keyScroll = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
       if (["ArrowDown","ArrowUp","PageDown","PageUp","Home","End"].includes(event.key)) resume();
     };
     const resize = new ResizeObserver(schedule);
@@ -82,6 +83,17 @@ export default function ServicePetalWheel() {
       return { index, angle: target + Math.round((old.angle-target)/360)*360, zoom: 1, scrolling: false };
     });
   };
+  const moveFocus = (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
+    const next = event.key === "ArrowRight" ? (index + 1) % 6
+      : event.key === "ArrowLeft" ? (index + 5) % 6
+      : event.key === "Home" ? 0 : event.key === "End" ? 5 : null;
+    if (next === null) return;
+    event.preventDefault();
+    choose(next);
+    requestAnimationFrame(() => {
+      experience.current?.querySelector<HTMLButtonElement>(`[data-petal-content="${next}"] button`)?.focus({ preventScroll: true });
+    });
+  };
   const select = (event: MouseEvent, index: number) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault(); choose(index);
@@ -94,11 +106,8 @@ export default function ServicePetalWheel() {
           <svg className={n.orbit} viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" /><path d="M198 97 L194 100 L198 103" /></svg>
           <div className={n.rotor} data-flower-rotor>
             <PetalFlowerScene active={current} />
-            <svg className={s.logoWheelArtwork} viewBox="0 0 200 200" role="group" aria-label="Interactive Deepa Chakra">
-              {wheelPaths.map((path,index) => <a key={path.title} href={path.href} role="button" aria-pressed={current===index} aria-label={`Preview ${path.title}`} data-petal-index={index} tabIndex={visual.zoom>.85 && current!==index?-1:0} onClick={event=>select(event,index)} onKeyDown={event=>{
-                if(event.key===" "){event.preventDefault();choose(index);}
-                if(event.key==="ArrowRight"||event.key==="ArrowLeft"){event.preventDefault();const next=(current+(event.key==="ArrowRight"?1:5))%6;choose(next);event.currentTarget.parentElement?.querySelector<SVGAElement>(`[data-petal-index="${next}"]`)?.focus();}
-              }} className={`${s.logoPetalLink} ${n.petalLink}`} style={{"--petal-color":path.color,"--petal-angle":`${index*60}deg`} as CSSProperties} data-active={current===index}>
+            <svg className={s.logoWheelArtwork} viewBox="0 0 200 200" aria-hidden="true">
+              {wheelPaths.map((path,index) => <a key={path.title} href={path.href} role="button" aria-pressed={current===index} aria-label={`Preview ${path.title}`} data-petal-index={index} tabIndex={-1} onClick={event=>select(event,index)} className={`${s.logoPetalLink} ${n.petalLink}`} style={{"--petal-color":path.color,"--petal-angle":`${index*60}deg`} as CSSProperties} data-active={current===index}>
                 <title>{path.title}</title>
                 <g transform={`translate(100 100) rotate(${index*60})`}>
                   <path className={s.logoPetalFill} d={petal}/><path className={s.logoPetalHit} d={petal}/>
@@ -108,9 +117,9 @@ export default function ServicePetalWheel() {
             </svg>
             {wheelPaths.map((path,index) => {
               const angle = index * Math.PI / 3;
-              return <article key={path.title} className={n.petalContent} data-petal-content={index} data-active={current===index} style={{left:`${(50+Math.sin(angle)*27.5).toFixed(4)}%`,top:`${(50-Math.cos(angle)*27.5).toFixed(4)}%`}}>
-                <h3><button type="button" aria-label={`Select ${path.title}`} aria-pressed={current===index} tabIndex={visual.zoom>.85 && current!==index?-1:0} onClick={()=>choose(index)}>{path.title}</button></h3>
-                <div className={n.petalDetails}><div><p>{path.description}</p><p className={n.petalDetail}>{path.detail}</p>
+              return <article key={path.title} className={n.petalContent} data-petal-content={index} data-active={current===index} aria-hidden={visual.zoom>.85 && current!==index} inert={visual.zoom>.85 && current!==index} style={{left:`${(50+Math.sin(angle)*27.5).toFixed(4)}%`,top:`${(50-Math.cos(angle)*27.5).toFixed(4)}%`}}>
+                <h3><button type="button" aria-label={`Select ${path.title}`} aria-pressed={current===index} tabIndex={visual.zoom>.85 && current!==index?-1:0} onClick={()=>choose(index)} onKeyDown={event=>moveFocus(event,index)}>{path.title}</button></h3>
+                <div className={n.petalDetails} aria-hidden={visual.zoom<=.85 || current!==index}><div><p>{path.description}</p><p className={n.petalDetail}>{path.detail}</p>
                 <a tabIndex={visual.zoom>.85 && current===index?0:-1} href={path.href} aria-label={index===4?"Book a conversation":`Explore ${path.title}`}>{index===4?"Let’s talk":"Explore"} <span aria-hidden="true">↗</span></a></div></div>
               </article>;
             })}

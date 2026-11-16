@@ -21,7 +21,12 @@ export default function PetalFlowerScene({ active }: { active: number }) {
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     if (connection?.saveData) return;
 
-    void import("three").then(T => {
+    let started = false;
+    const prepare = () => {
+      if (started || disposed) return;
+      started = true;
+      preparation.disconnect();
+      void import("three").then(T => {
       if (disposed) return;
       let renderer: InstanceType<typeof T.WebGLRenderer>;
       try { renderer = new T.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "low-power" }); }
@@ -169,7 +174,12 @@ export default function PetalFlowerScene({ active }: { active: number }) {
         geometry.dispose(); surface.dispose(); materials.flat().forEach(material => material.dispose()); shadowGeometry.dispose(); shadowMaterial.dispose(); renderer.dispose(); renderer.domElement.remove();
       };
     }).catch(() => { release(); });
-    return () => { disposed = true; release(); };
+    };
+    const preparation = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) prepare();
+    }, { rootMargin: "400px" });
+    preparation.observe(wheel.closest("[data-flower-experience]") ?? wheel);
+    return () => { disposed = true; preparation.disconnect(); release(); };
   }, []);
   return <div ref={host} className={s.petalFlowerCanvas} aria-hidden="true" />;
 }
