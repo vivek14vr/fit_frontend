@@ -91,6 +91,7 @@ export function MarketingHeader() {
           <Link href="/about" aria-current={isCurrent("/about") ? "page" : undefined}>About Deepti</Link>
           <Link href="/programmes" onClick={closeMenus} aria-current={isCurrent("/programmes") ? "page" : undefined}>Programmes</Link>
           <Link href="/approach" aria-current={isCurrent("/approach") ? "page" : undefined}>How it works</Link>
+          <Link href="/testimonials" aria-current={isCurrent("/testimonials") ? "page" : undefined}>Testimonials</Link>
           <Link href="/contact" aria-current={isCurrent("/contact") ? "page" : undefined}>Contact</Link>
         </nav>
 
@@ -119,13 +120,14 @@ export function MarketingHeader() {
           <div className="marketing-mobile-menu-inner home-shell">
             <div className="marketing-mobile-menu-topline">
               <span>THE DEEPA CHAKRA</span>
-              <span>01 / 04</span>
+              <span>01 / 05</span>
             </div>
             <nav className="marketing-mobile-nav" aria-label="Mobile navigation links">
               <Link href="/about" onClick={closeMenus} aria-current={isCurrent("/about") ? "page" : undefined}><span>01</span>About Deepti</Link>
               <Link href="/programmes" onClick={closeMenus} aria-current={isCurrent("/programmes") ? "page" : undefined}><span>02</span>Programmes</Link>
               <Link href="/approach" onClick={closeMenus} aria-current={isCurrent("/approach") ? "page" : undefined}><span>03</span>How it works</Link>
-              <Link href="/contact" onClick={closeMenus} aria-current={isCurrent("/contact") ? "page" : undefined}><span>04</span>Contact</Link>
+              <Link href="/testimonials" onClick={closeMenus} aria-current={isCurrent("/testimonials") ? "page" : undefined}><span>04</span>Testimonials</Link>
+              <Link href="/contact" onClick={closeMenus} aria-current={isCurrent("/contact") ? "page" : undefined}><span>05</span>Contact</Link>
             </nav>
             <div className="marketing-mobile-actions">
               <Link className="marketing-mobile-primary" href="/consultation" onClick={closeMenus}>Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link>
@@ -148,6 +150,7 @@ export function MarketingFooter() {
           <Link href="/about">About Deepti</Link>
           <Link href="/programmes">Programmes</Link>
           <Link href="/approach">How it works</Link>
+          <Link href="/testimonials">Testimonials</Link>
           <Link href="/contact">Contact</Link>
           <Link href="/consultation">Book a 1:1 with Deepti</Link>
         </div>

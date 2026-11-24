@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
-type BookingRegion = "india" | "international";
+type BookingRegion = "india" | "worldwide";
 
 const BOOKING_LINKS: Record<BookingRegion, string> = {
   india: "https://cal.com/deeptisherawat/1-on-1-health-consultation",
-  international: "https://cal.com/deeptisherawat/1-on-1-health-consultation-international",
+  worldwide: "https://cal.com/deeptisherawat/1-on-1-health-consultation-international",
 };
 
 type ContactDraft = {
@@ -28,7 +28,7 @@ const EMPTY_DRAFT: ContactDraft = {
 };
 
 export default function ContactEnquiryForm() {
-  const [region, setRegion] = useState<BookingRegion>("international");
+  const [region, setRegion] = useState<BookingRegion>("worldwide");
   const [countryCode, setCountryCode] = useState("+1");
   const [draft, setDraft] = useState<ContactDraft>(EMPTY_DRAFT);
   const [submitted, setSubmitted] = useState(false);
@@ -86,7 +86,7 @@ export default function ContactEnquiryForm() {
           setRegion(nextRegion);
           if (nextRegion === "india") setCountryCode("+91");
         }}>
-          <option value="international">US / International</option>
+          <option value="worldwide">Outside India / Worldwide online</option>
           <option value="india">India</option>
         </select>
         <small id="contact-booking-region-help">Your booking calendar will match this selection.</small>

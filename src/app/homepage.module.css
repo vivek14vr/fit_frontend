@@ -644,10 +644,14 @@
   .sectionTransitionScene { display: none; }
 }
 
-/* Editorial direction: an immersive opening, generous type and alternating chapter rhythms. */
-.hero { position: relative; isolation: isolate; display: flex; align-items: center; overflow: hidden; max-width: none; min-height: min(850px,calc(100svh - 82px)); margin: 0; padding: 72px max(6vw,32px) 84px; background: #123e3b; color: #fff9e9; }
-.heroMedia { position: absolute; z-index: -1; inset: 0; height: 100%; align-self: stretch; transform-origin: center; }
-.heroCopy { position: relative; width: min(780px,70%); padding: 0; }
+/* Editorial direction: the introduction and Deepti's portrait share the hero. */
+.hero { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0,.86fr) minmax(440px,1.14fr); align-items: center; overflow: hidden; max-width: none; min-height: min(820px,calc(100svh - 82px)); margin: 0; padding: 64px max(5vw,32px) 72px; gap: clamp(42px,6vw,104px); background: #123e3b; color: #fff9e9; }
+.heroMedia { position: relative; z-index: 0; inset: auto; width: 100%; height: clamp(560px,68svh,720px); align-self: center; overflow: hidden; border-radius: 180px 180px 4px 4px; background: #d7e0d2; box-shadow: 0 30px 70px rgba(0,0,0,.24); transform-origin: center; }
+.heroPortraitImage { object-fit: cover; object-position: center 20%; }
+.heroPortraitShade { position: absolute; z-index: 1; inset: 52% 0 0; background: linear-gradient(transparent,rgba(9,40,36,.76)); pointer-events: none; }
+.heroPortraitCaption { position: absolute; z-index: 2; right: 28px; bottom: 26px; max-width: 250px; margin: 0 !important; color: #fff9e9; font-size: 11px; line-height: 1.5; text-align: right; text-shadow: 0 2px 18px rgba(9,40,36,.78); }
+.heroPortraitCaption span { display: block; margin-bottom: 4px; color: #e3b449; font-size: 9px; letter-spacing: .17em; }
+.heroCopy { position: relative; z-index: 1; width: 100%; padding: 0; }
 .heroCopy .eyebrow { color: #e2d9be; font-size: 10px; letter-spacing: .2em; margin-bottom: 32px; }
 .heroCopy .eyebrow > span { background: #e3b449; }
 .heroCopy h1 { font-size: clamp(64px,7.5vw,112px); line-height: .96; letter-spacing: -.045em; margin-bottom: 30px; }
@@ -713,13 +717,17 @@
 .close h2 em { color: #e3b449; }
 .close .section { padding-block: 92px; }
 .close .button { background: #e3b449; border-color: #e3b449; }
-@media(max-width:1100px) { .heroCopy { width: 74%; } .heroCopy .actions { flex-wrap: wrap; } .aboutGrid { gap: 44px; } .metabolicFocus { gap: 32px; } }
+@media(max-width:1100px) { .hero { grid-template-columns: minmax(0,.9fr) minmax(390px,1.1fr); gap: 40px; } .heroCopy { width: 100%; } .heroCopy .actions { flex-wrap: wrap; } .aboutGrid { gap: 44px; } .metabolicFocus { gap: 32px; } }
 @media(max-width:900px) {
- .hero { min-height: 730px; padding: 64px 32px 78px; }
+ .hero { grid-template-columns: 1fr; min-height: 0; padding: 56px 32px 68px; }
  .heroCopy { width: 100%; }
  .heroCopy h1 { font-size: clamp(64px,10vw,88px); }
  .heroCopy .lede { max-width: 440px; }
  .heroCopy .heroNote { margin-top: 28px; }
+ .heroMedia { height: clamp(460px,82vw,640px); max-width: 640px; margin-inline: auto; }
+ .heroPortraitImage { object-position: center 20%; }
+ .heroPortraitShade { inset: 55% 0 0; background: linear-gradient(transparent,rgba(9,40,36,.78)); }
+ .heroPortraitCaption { right: 24px; bottom: 24px; }
  .principles { gap: 12px 22px; }
  .aboutGrid { grid-template-columns: 1fr 1fr; gap: 30px; }
  .aboutPortrait { height: 500px; }
@@ -736,13 +744,16 @@
  .journey,.faq { padding-block: 64px; gap: 36px; }
 }
 @media(max-width:600px) {
- .hero { min-height: 680px; padding: 50px 24px 82px; }
+ .hero { min-height: 0; padding: 44px 20px 56px; gap: 34px; }
  .heroCopy h1 { font-size: clamp(48px,13vw,74px); }
  .heroCopy .eyebrow { font-size: 9px; letter-spacing: .13em; margin-bottom: 28px; }
  .heroCopy .lede { font-size: 15px; }
  .heroCopy .actions { align-items: flex-start; gap: 18px; }
  .heroCopy .button { min-height: 52px; font-size: 13px; }
  .heroCopy .heroNote { font-size: 10px; }
+ .heroMedia { height: auto; min-height: 0; aspect-ratio: 4 / 5; border-radius: 96px 96px 3px 3px; }
+ .heroPortraitImage { object-position: center 20%; }
+ .heroPortraitCaption { display: none; }
  .principles { display: grid; grid-template-columns: 1fr; gap: 10px; text-align: center; font-size: 9px; }
  .principles i { display: none; }
  .serviceDiscovery { margin-top: 46px; }
@@ -800,4 +811,35 @@
  .hero { min-height:0; padding-block:36px 82px; }
  .heroCopy h1 { font-size:clamp(48px,8vw,68px); }
  .mobileBooking { display:none; }
+}
+
+/* The hero owns Deepti's portrait; this section keeps the introduction editorial and text-led. */
+.aboutGrid { grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); align-items:start; gap:clamp(56px,9vw,138px); }
+.aboutIntro { position:sticky; top:130px; }
+.aboutIntro h2 { max-width:10ch; margin-bottom:38px; }
+.aboutProof { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin:0; padding:22px 0 0; border-top:1px solid rgba(255,255,255,.22); list-style:none; }
+.aboutProof li { min-width:0; padding:0 18px; border-right:1px solid rgba(255,255,255,.18); }
+.aboutProof li:first-child { padding-left:0; }
+.aboutProof li:last-child { padding-right:0; border-right:0; }
+.aboutProof strong { display:block; margin-bottom:6px; color:#e3b449; font:400 clamp(22px,2.2vw,32px)/1.1 var(--font-written); }
+.aboutProof span { display:block; color:#b9cdc2; font-size:10px; line-height:1.45; letter-spacing:.08em; text-transform:uppercase; }
+.aboutCopy { padding-top:40px; }
+.aboutCopy > p { max-width:56ch; font-size:clamp(16px,1.35vw,19px); line-height:1.75; }
+.aboutCopy > p + p { margin-top:22px; }
+
+@media(max-width:900px) {
+ .aboutGrid { grid-template-columns:1fr; gap:44px; }
+ .aboutIntro { position:static; }
+ .aboutIntro h2 { max-width:12ch; }
+ .aboutCopy { max-width:680px; padding-top:0; }
+}
+
+@media(max-width:600px) {
+ .aboutGrid { gap:32px; }
+ .aboutIntro h2 { margin-bottom:30px; }
+ .aboutProof { grid-template-columns:1fr; padding-top:0; border-top:0; }
+ .aboutProof li,.aboutProof li:first-child,.aboutProof li:last-child { display:grid; grid-template-columns:95px 1fr; align-items:center; padding:13px 0; border-right:0; border-bottom:1px solid rgba(255,255,255,.18); }
+ .aboutProof li:first-child { border-top:1px solid rgba(255,255,255,.18); }
+ .aboutProof strong { margin:0; font-size:26px; }
+ .aboutCopy > p { font-size:16px; }
 }

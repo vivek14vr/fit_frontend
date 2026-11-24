@@ -7,10 +7,12 @@ import { MarketingHeader, MarketingFooter } from "./components/marketing-chrome"
 import { programmeData } from "./components/marketing-data";
 import s from "./homepage.module.css";
 import HomePhoto from "./components/home-photo";
-import HeroLivingGarden from "./components/hero-living-garden";
 import ServicePetalWheel from "./components/service-petal-wheel";
 import BrandFlowerMark from "./components/brand-flower-mark";
 import { useHomeChoreography } from "./components/use-home-choreography";
+import BodyConcerns, { type BodyConcernId } from "./components/body-concerns";
+import HealthGoalPopup from "./components/health-goal-popup";
+import StickySocialLinks from "./components/sticky-social-links";
 
 const images = [
   "/programmes/gut.jpg",
@@ -25,7 +27,7 @@ const steps = [
 ];
 const questions = [
   ["What should I prepare?", "Bring your questions and a picture of your usual meals, routines and nutrition goals. You do not need to select a programme before the call."],
-  ["What does the consultation cost?", "The direct 1:1 Health Assessment with Deepti is ₹1,500 in India. US/international call booking is currently free. Choose your region on the consultation page to see the appropriate booking option."],
+  ["What does the consultation cost?", "The direct 1:1 Health Assessment with Deepti is ₹1,500 in India. Online consultations from elsewhere in the world are currently complimentary. Choose your region on the consultation page to see the appropriate booking option."],
   ["Where should I begin?", "Start with a consultation. You do not need to choose a programme beforehand; the conversation helps clarify your priorities and the appropriate next step."],
   ["Is this medical care?", "Deepti is a nutritionist. The practice offers nutrition education and personalised guidance, and does not replace diagnosis, treatment or advice from your medical team."],
   ["Will my food preferences be considered?", "Your usual foods, cultural preferences and daily routine belong in the conversation. Share dietary restrictions and relevant medical advice during your consultation."],
@@ -42,12 +44,19 @@ export default function Home() {
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [showMobileBooking, setShowMobileBooking] = useState(false);
   const [step, setStep] = useState<number | null>(0);
+  const [goalPopupOpen, setGoalPopupOpen] = useState(false);
+  const [goalPopupConcern, setGoalPopupConcern] = useState<BodyConcernId>();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const programmeSection = useRef<HTMLElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const manualProgramme = useRef(false);
   const programme = programmeData[active];
   useHomeChoreography(root);
+
+  const openGoalPopup = (concern?: BodyConcernId) => {
+    setGoalPopupConcern(concern);
+    setGoalPopupOpen(true);
+  };
 
   useEffect(() => {
     const element = root.current;
@@ -126,11 +135,15 @@ export default function Home() {
           <div className={s.heroCopy}>
             <p className={s.eyebrow} data-hero-support><span /> DEEPTI SHERAWAT · NUTRITIONIST</p>
             <h1 aria-label="A little balance. A lot more you."><span className={s.heroLine}><span data-hero-line>A little</span></span><span className={s.heroLine}><span data-hero-line>balance.</span></span><span className={s.heroLine}><em data-hero-line>A lot more you.</em></span></h1>
-            <p className={s.lede} data-hero-support>Food you love. A rhythm that fits. Personal nutrition with Deepti, bringing Ayurveda and modern science into your everyday life.</p>
+            <p className={s.lede} data-hero-support>Food you love. A rhythm that fits. Personal nutrition from India to wherever you are, bringing Ayurveda and modern science into your everyday life.</p>
             <div className={s.actions} data-hero-support><Link className={s.button} href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link><a className={s.textLink} href="#discover-your-path">Find your starting point <span aria-hidden="true">↓</span></a></div>
             <div className={s.heroNote} data-hero-support><span className={s.noteLine} />Your story first. Your nutrition plan next.</div>
           </div>
-          <div className={s.heroMedia} data-hero-media><HeroLivingGarden /></div>
+          <div className={s.heroMedia} data-hero-media>
+            <Image className={s.heroPortraitImage} src="/deepti.webp" alt="Deepti Sherawat, nutritionist" fill loading="eager" fetchPriority="high" sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 900px) calc(100vw - 64px), 52vw" />
+            <div className={s.heroPortraitShade} aria-hidden="true" />
+            <p className={s.heroPortraitCaption}><span>DEEPTI SHERAWAT</span>Based in India · Consulting worldwide online</p>
+          </div>
         </section>
 
         <div className={s.principles}><span>Rooted in Ayurveda</span><i aria-hidden="true">✦</i><span>Informed by modern science</span><i aria-hidden="true">✦</i><span>Personal to you</span></div>
@@ -149,17 +162,24 @@ export default function Home() {
 
         <section id="about-deepti" className={s.about} data-transition-section="about">
           <div className={`${s.section} ${s.aboutGrid}`}>
-            <div className={s.aboutPortrait} data-motion-portrait data-home-reveal data-reveal="scale">
-              <Image src="/deepti.webp" alt="Deepti Sherawat, nutritionist" width={768} height={1152} sizes="(max-width: 900px) calc(100vw - 48px), 34vw" className={s.aboutPortraitImage} data-editorial-image />
-              <div className={s.aboutPortraitCaption}><span>DEEPTI SHERAWAT</span><small>Ayurveda · Functional nutrition</small></div>
+            <div className={s.aboutIntro} data-home-reveal data-reveal="left">
+              <p className={s.eyebrow}>YOUR NUTRITIONIST</p>
+              <h2>Where Ayurveda meets<br /><em>functional nutrition.</em></h2>
+              <ul className={s.aboutProof} aria-label="Deepti's practice at a glance">
+                <li><strong>10+</strong><span>Years in practice</span></li>
+                <li><strong>700+</strong><span>Client journeys</span></li>
+                <li><strong>Worldwide</strong><span>Online consultations</span></li>
+              </ul>
             </div>
-            <div data-home-reveal data-reveal="right"><p className={s.eyebrow}>YOUR NUTRITIONIST</p><h2>Where Ayurveda meets<br /><em>functional nutrition.</em></h2><p>For more than 10 years and 700+ client journeys worldwide, Deepti has worked at the intersection of Ayurveda, functional nutrition and metabolic health.</p><p>Her approach looks at digestion, food patterns, lifestyle, body type and health markers—especially when Indian eating habits meet the realities of modern life abroad.</p><ul className={s.aboutValues} aria-label="What guides the conversation"><li><span>01</span>Digestion &amp; rhythm</li><li><span>02</span>Food patterns</li><li><span>03</span>Health markers</li></ul><Link href="/consultation" className={s.aboutButton}>Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div>
+            <div className={s.aboutCopy} data-home-reveal data-reveal="right"><p>Deepti works at the intersection of Ayurveda, functional nutrition and metabolic health, bringing each perspective into one considered practice.</p><p>Her approach looks at digestion, food patterns, lifestyle, body type and health markers—especially when Indian eating habits meet the realities of modern life anywhere in the world.</p><ul className={s.aboutValues} aria-label="What guides the conversation"><li><span>01</span>Digestion &amp; rhythm</li><li><span>02</span>Food patterns</li><li><span>03</span>Health markers</li></ul><Link href="/consultation" className={s.aboutButton}>Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div>
           </div>
         </section>
 
+        <BodyConcerns onStartConversation={openGoalPopup} />
+
         <section id="first-conversation" className={`${s.section} ${s.callIntroduction}`} data-transition-section="conversation">
           <div data-home-reveal data-reveal="left"><p className={s.eyebrow}>YOUR FIRST CONVERSATION</p><h2>Space to be heard.<br /><em>Clarity to begin.</em></h2></div>
-          <div data-home-reveal data-reveal="right"><p>A 1:1 Health Assessment with Deepti begins with you—not a preset programme. Bring your questions and the everyday realities that shape how you eat.</p><ol className={s.callDetails} data-step-list><li><span>01</span>Your priorities, food habits and routine</li><li><span>02</span>A conversation about your nutrition goals</li><li><span>03</span>Guidance on an appropriate next step</li></ol><Link href="/consultation" className={s.textLink}>View consultation options <span aria-hidden="true">↗</span></Link><p className={s.callPricing}>US &amp; international: complimentary for now · India: ₹1,500</p></div>
+          <div data-home-reveal data-reveal="right"><p>A 1:1 Health Assessment with Deepti begins with you—not a preset programme. Bring your questions and the everyday realities that shape how you eat.</p><ol className={s.callDetails} data-step-list><li><span>01</span>Your priorities, food habits and routine</li><li><span>02</span>A conversation about your nutrition goals</li><li><span>03</span>Guidance on an appropriate next step</li></ol><Link href="/consultation" className={s.textLink}>View consultation options <span aria-hidden="true">↗</span></Link><p className={s.callPricing}>Based in India · Online consultations available worldwide</p></div>
         </section>
 
         <section id="watch-video" className={`${s.section} ${s.videoSection}`} data-transition-section="approach">
@@ -179,7 +199,7 @@ export default function Home() {
             <div className={s.metabolicIntro} data-home-reveal data-reveal="left">
               <p className={s.eyebrow}>A FOCUSED 12-WEEK PATH</p>
               <h2>Your health goals.<br /><em>Your everyday food.</em></h2>
-              <p>A personalised programme combining <strong>Ayurveda + functional nutrition</strong> to account for South Asian bodies, Indian eating patterns and life in the US &amp; Canada.</p>
+              <p>A personalised programme combining <strong>Ayurveda + functional nutrition</strong> to account for South Asian bodies, Indian eating patterns and real life—wherever you live.</p>
               <Link href="/programmes/weight-metabolic" className={s.textLink}>Explore metabolic health <span aria-hidden="true">↗</span></Link>
             </div>
             <div className={s.metabolicCard} data-home-reveal data-reveal="right">
@@ -231,6 +251,14 @@ export default function Home() {
       </main>
       <MarketingFooter />
       <div className={s.mobileBooking} data-visible={showMobileBooking}><Link href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div>
+      <StickySocialLinks />
+      <HealthGoalPopup
+        key={goalPopupConcern ?? "general"}
+        open={goalPopupOpen}
+        initialConcern={goalPopupConcern}
+        onOpen={() => openGoalPopup()}
+        onClose={() => setGoalPopupOpen(false)}
+      />
     </div>
   );
 }

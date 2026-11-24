@@ -218,6 +218,52 @@
 .page :global(.about-page-copy h2 em) { color: #4b8173; }
 .page :global(.about-page-copy > p:not(.home-section-label)) { max-width: 570px; color: var(--home-muted); }
 .page :global(.about-page-copy .home-button) { margin-top: 12px; }
+
+.page :global(.testimonials-coming-soon) {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(28px, 5vw, 72px);
+  margin-top: 52px;
+  padding: clamp(34px, 5vw, 64px);
+  color: #f3f2e9;
+  background: #123e3b;
+  box-shadow: 0 22px 54px rgba(22, 75, 71, .14);
+}
+
+.page :global(.testimonials-coming-soon-index) {
+  align-self: start;
+  color: #e3b449;
+  font: 300 clamp(44px, 6vw, 78px)/1 var(--font-written);
+}
+
+.page :global(.testimonials-coming-soon .home-card-kicker) { color: #b9cdc2; }
+.page :global(.testimonials-coming-soon h3) { max-width: 15ch; margin: 10px 0 18px; color: #f3f2e9; font: 300 clamp(34px, 4vw, 54px)/1.05 var(--font-written); letter-spacing: -.04em; }
+.page :global(.testimonials-coming-soon p:not(.home-card-kicker)) { max-width: 610px; margin: 0; color: #c8d8cd; }
+.page :global(.testimonials-coming-soon .home-text-link) { align-self: end; color: #fff9e9; white-space: nowrap; }
+.page :global(.testimonials-principles-grid) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 52px; border-block: 1px solid #cbd7c8; }
+.page :global(.testimonials-principles-grid article) { padding: 32px clamp(22px, 3vw, 40px); border-right: 1px solid #cbd7c8; }
+.page :global(.testimonials-principles-grid article:first-child) { padding-left: 0; }
+.page :global(.testimonials-principles-grid article:last-child) { padding-right: 0; border-right: 0; }
+.page :global(.testimonials-principles-grid span) { color: #9e2f28; font-size: 10px; letter-spacing: .15em; }
+.page :global(.testimonials-principles-grid h3) { margin: 18px 0 12px; color: var(--home-ink); font: 300 30px/1.1 var(--font-written); }
+.page :global(.testimonials-principles-grid p) { margin: 0; color: var(--home-muted); }
+.page :global(.testimonials-cta-section .home-button) { margin-top: 14px; }
+
+@media (max-width: 900px) {
+  .page :global(.testimonials-coming-soon) { grid-template-columns: 70px 1fr; }
+  .page :global(.testimonials-coming-soon .home-text-link) { grid-column: 2; justify-self: start; }
+}
+
+@media (max-width: 600px) {
+  .page :global(.testimonials-coming-soon) { grid-template-columns: 1fr; gap: 20px; margin-top: 34px; padding: 28px 22px; }
+  .page :global(.testimonials-coming-soon .home-text-link) { grid-column: 1; }
+  .page :global(.testimonials-principles-grid) { grid-template-columns: 1fr; margin-top: 34px; }
+  .page :global(.testimonials-principles-grid article),
+  .page :global(.testimonials-principles-grid article:first-child),
+  .page :global(.testimonials-principles-grid article:last-child) { padding: 24px 0; border-right: 0; border-bottom: 1px solid #cbd7c8; }
+  .page :global(.testimonials-principles-grid article:last-child) { border-bottom: 0; }
+}
 .page :global(.about-practice-grid) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .page :global(.about-practice-grid .home-feature-card) { min-height: 350px; }
 .page :global(.home-feature-card-sage) { background: #e4ebe0; }

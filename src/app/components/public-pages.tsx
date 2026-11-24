@@ -217,6 +217,50 @@ export function AboutPageContent() {
   );
 }
 
+export function TestimonialsPageContent() {
+  return (
+    <>
+      <section className="public-detail-section testimonials-story-section">
+        <div className="home-shell public-detail-heading">
+          <div>
+            <p className="home-section-label">CLIENT STORIES</p>
+            <h2>Real experiences, shared with permission.</h2>
+          </div>
+          <p>Health stories are personal. This page will only publish reflections that a client has approved, with the level of identification they are comfortable sharing.</p>
+        </div>
+        <div className="home-shell testimonials-coming-soon" role="status">
+          <div className="testimonials-coming-soon-index" aria-hidden="true">01</div>
+          <div>
+            <p className="home-card-kicker">STORIES IN PREPARATION</p>
+            <h3>Approved client reflections will live here.</h3>
+            <p>We are preparing this collection with care. No quote, name, photograph or health experience will be published without clear permission from the person behind it.</p>
+          </div>
+          <Link className="home-text-link" href="/consultation">Start your own conversation <span aria-hidden="true">↗</span></Link>
+        </div>
+      </section>
+
+      <section className="public-detail-section public-detail-section-soft testimonials-principles-section">
+        <div className="home-shell public-detail-heading">
+          <div><p className="home-section-label">HOW STORIES ARE SHARED</p><h2>Care continues after the consultation.</h2></div>
+          <p>Every story should protect the person first and give future clients useful context without promising the same outcome for everyone.</p>
+        </div>
+        <div className="home-shell testimonials-principles-grid">
+          <article><span>01</span><h3>Permission first</h3><p>The client decides whether their reflection can be published and how they are identified.</p></article>
+          <article><span>02</span><h3>Privacy respected</h3><p>Personal and health details stay private unless the client has explicitly approved their use.</p></article>
+          <article><span>03</span><h3>Context, not promises</h3><p>One person’s experience is never presented as a guaranteed result for somebody else.</p></article>
+        </div>
+      </section>
+
+      <section className="public-detail-section testimonials-cta-section">
+        <div className="home-shell public-detail-heading">
+          <div><p className="home-section-label">YOUR STARTING POINT</p><h2>Your questions deserve their own conversation.</h2></div>
+          <div><p>Bring what you have noticed, what feels difficult and what you would like to understand. The first conversation is where the next useful step becomes clearer.</p><Link className="home-button home-button-primary" href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div>
+        </div>
+      </section>
+    </>
+  );
+}
+
 export function ProgrammesPageContent() {
   const programmeImages: Record<string, string> = {
     gut: "/programmes/gut.jpg",
