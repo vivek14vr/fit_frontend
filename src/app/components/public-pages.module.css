@@ -343,7 +343,7 @@
 
 .page :global(.home-text-link-light) { color: #f3f2e9; }
 .page :global(.contact-form-section) { padding-top: clamp(64px, 8vw, 96px); }
-.page :global(.contact-form-layout) { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, .72fr); gap: 38px; align-items: start; }
+.page :global(.contact-form-layout) { display: grid; grid-template-columns: minmax(0, 820px); justify-content: center; gap: 38px; align-items: start; }
 .page :global(.contact-form-card),
 .page :global(.contact-assessment-card) { border: 1px solid #d9d3c5; background: #fdfcf8; box-shadow: 0 18px 40px rgba(22, 75, 71, .06); }
 .page :global(.contact-form-card) { padding: clamp(28px, 4vw, 42px); }
@@ -385,6 +385,13 @@
 .page :global(.contact-form-success h3) { max-width: 12ch; margin: 0; color: var(--home-ink); font: 300 clamp(38px, 4vw, 54px)/1.04 var(--font-written); letter-spacing: -.05em; }
 .page :global(.contact-form-success h3:focus) { outline: 3px solid var(--home-haldi); outline-offset: 6px; }
 .page :global(.contact-form-success > p:not(.home-section-label):not(.contact-form-meta)) { max-width: 520px; margin: 0; color: var(--home-muted); }
+.page :global(.contact-form-error) { margin: 0; padding: 12px 14px; color: #7c2724; border-left: 3px solid #9e2f28; background: #f9e9e6; font-size: 13px; }
+.page :global(.contact-submit:disabled) { opacity: .55; cursor: wait; }
+.page :global(.consultation-route-note) { display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start; margin: 28px 0 30px; padding: 18px 20px; border-left: 4px solid var(--home-teal); background: #e4ebe5; color: var(--home-muted); }
+.page :global(.consultation-route-note > span) { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: var(--home-teal); color: #fff; }
+.page :global(.consultation-route-note p) { margin: 0; }
+.page :global(.consultation-route-note strong) { color: var(--home-ink); }
+.page :global(.consultation-start-button) { margin-top: 4px; }
 .page :global(.contact-calendar-link) { justify-self: start; margin-top: 4px; }
 .page :global(.contact-edit-link) { justify-self: start; padding: 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--home-ink); font: 600 13px/1.4 var(--font-body); cursor: pointer; }
 .page :global(.consultation-contact-section) { padding-top: clamp(64px, 8vw, 96px); }
@@ -638,7 +645,6 @@
   .page :global(.contact-field-grid) { grid-template-columns: 1fr; }
   .page :global(.about-page-portrait) { aspect-ratio: 4 / 5; }
   .page :global(.contact-form-card) { padding: 24px; }
-  .page :global(.contact-assessment-card) { padding: 24px; }
   .page :global(.contact-phone-field) { grid-template-columns: 1fr; }
   .page :global(.about-principles-grid) { grid-template-columns: 1fr; }
   .page :global(.about-editorial-image),

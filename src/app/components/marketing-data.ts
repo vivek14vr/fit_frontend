@@ -8,6 +8,7 @@ export type Programme = {
   detail: string;
   colour: "aqua" | "sand" | "coral" | "ink";
   imageClass: string;
+  image: string;
   highlights: string[];
 };
 
@@ -24,6 +25,7 @@ export const programmeData: Programme[] = [
       "We look at the patterns around food, digestion, sleep, energy and daily rhythm, then build a practical programme you can return to in real life.",
     colour: "aqua",
     imageClass: "programme-image-gut",
+    image: "/programmes/gut.jpg",
     highlights: ["Personal history and food patterns", "Ayurvedic context", "Practical weekly rhythm"],
   },
   {
@@ -38,6 +40,7 @@ export const programmeData: Programme[] = [
       "Together we bring context to your habits, routines and existing reports, then turn that understanding into simple, repeatable choices.",
     colour: "sand",
     imageClass: "programme-image-liver",
+    image: "/programmes/liver.jpg",
     highlights: ["Lifestyle and nutrition review", "Evidence-informed education", "A plan made for your pace"],
   },
   {
@@ -52,6 +55,7 @@ export const programmeData: Programme[] = [
       "This programme makes room for your history, environment and goals, so the next steps feel clear, measurable and possible to keep.",
     colour: "coral",
     imageClass: "programme-image-metabolic",
+    image: "/programmes/metabolic.jpg",
     highlights: ["Context before recommendations", "Clear food and habit experiments", "Progress reviewed together"],
   },
   {
@@ -66,7 +70,38 @@ export const programmeData: Programme[] = [
       "We connect your everyday nourishment with the rhythms around it, keeping the work grounded, personal and free from quick-fix promises.",
     colour: "ink",
     imageClass: "programme-image-skin",
+    image: "/programmes/skin.jpg",
     highlights: ["Food and routine context", "Ayurvedic lifestyle lens", "Personalised next steps"],
+  },
+  {
+    slug: "hormones-thyroid",
+    number: "05",
+    title: "Hormones & Thyroid",
+    shortTitle: "Hormones & thyroid",
+    eyebrow: "RHYTHM · SUPPORT · CONTEXT",
+    description:
+      "For people exploring cycle changes, PCOS-related goals, thyroid questions or fertility nutrition alongside appropriate medical guidance.",
+    detail:
+      "We connect symptoms, routines, food patterns and existing clinical guidance, keeping the plan practical and personal rather than one-size-fits-all.",
+    colour: "aqua",
+    imageClass: "programme-image-hormones",
+    image: "/programmes/hormone-rhythm.webp",
+    highlights: ["Cycle and symptom context", "Food and routine review", "Medical guidance kept in view"],
+  },
+  {
+    slug: "mood-focus",
+    number: "06",
+    title: "Mood & Focus",
+    shortTitle: "Mood & focus",
+    eyebrow: "ENERGY · FOCUS · RECOVERY",
+    description:
+      "For people navigating brain fog, low mood, stress around food or energy that does not feel steady.",
+    detail:
+      "We look at nourishment, sleep, stress and daily rhythm together, then choose manageable experiments that support a more settled week.",
+    colour: "ink",
+    imageClass: "programme-image-mood",
+    image: "/programmes/mood-focus.webp",
+    highlights: ["Energy and routine review", "Food, sleep and stress context", "Small steps you can revisit"],
   },
 ];
 

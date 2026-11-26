@@ -2,6 +2,7 @@
 
 import { useState, type CSSProperties } from "react";
 import s from "./body-concerns.module.css";
+import BodyHealthScene from "./body-health-scene";
 
 export const BODY_CONCERNS = [
   {
@@ -57,10 +58,10 @@ export const BODY_CONCERNS = [
 export type BodyConcernId = (typeof BODY_CONCERNS)[number]["id"];
 
 type BodyConcernsProps = {
-  onStartConversation: (concern?: BodyConcernId) => void;
+  onOpenExplorer: (concern?: BodyConcernId) => void;
 };
 
-export default function BodyConcerns({ onStartConversation }: BodyConcernsProps) {
+export default function BodyConcerns({ onOpenExplorer }: BodyConcernsProps) {
   const [activeId, setActiveId] = useState<BodyConcernId>("gut");
   const active = BODY_CONCERNS.find((concern) => concern.id === activeId) ?? BODY_CONCERNS[3];
 
@@ -96,9 +97,10 @@ export default function BodyConcerns({ onStartConversation }: BodyConcernsProps)
             ))}
           </div>
 
-          <div className={s.bodyStage} data-home-reveal data-reveal="scale">
-            <div className={s.stageMeta} aria-hidden="true"><span>INTERACTIVE HEALTH MAP</span><span>{active.number} / 06</span></div>
-            <svg className={s.bodyArtwork} viewBox="0 0 360 620" role="img" aria-labelledby="body-map-title body-map-description">
+          <div className={s.bodyStage} data-body-stage data-home-reveal data-reveal="scale">
+            <div className={s.stageMeta} aria-hidden="true"><span>EXPLORE YOUR BODY</span></div>
+            <BodyHealthScene activeId={activeId} />
+            <svg className={`${s.bodyArtwork} ${s.bodyFallback}`} viewBox="0 0 360 620" role="img" aria-labelledby="body-map-title body-map-description">
               <title id="body-map-title">Interactive whole-body health goal map</title>
               <desc id="body-map-description">A human body illustration showing the mind, thyroid, liver, gut, metabolic and skin areas.</desc>
               <defs>
@@ -167,8 +169,8 @@ export default function BodyConcerns({ onStartConversation }: BodyConcernsProps)
             <div className={s.detailTopline}><p className={s.detailNumber}>{active.number} / 06</p><span>SELECTED FOCUS</span></div>
             <h3>{active.title}</h3>
             <p>{active.description}</p>
-            <button type="button" onClick={() => onStartConversation(active.id)}>
-              Tell us about your goals <span aria-hidden="true">↗</span>
+            <button type="button" onClick={() => onOpenExplorer(active.id)}>
+              Explore your body <span aria-hidden="true">↗</span>
             </button>
             <small>Nutrition guidance supports—not replaces—medical or mental-health care.</small>
           </article>

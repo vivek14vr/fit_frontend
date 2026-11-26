@@ -18,11 +18,11 @@ function isExternal(value: string) {
 export default function StickySocialLinks() {
   return (
     <aside className={s.rail} aria-label="Connect with Deepti">
-      <a href={whatsappUrl} target={isExternal(whatsappUrl) ? "_blank" : undefined} rel={isExternal(whatsappUrl) ? "noopener noreferrer" : undefined} aria-label="Contact Deepti on WhatsApp">
-        <WhatsAppMark /><span>WhatsApp</span>
-      </a>
       <a href={instagramUrl} target={isExternal(instagramUrl) ? "_blank" : undefined} rel={isExternal(instagramUrl) ? "noopener noreferrer" : undefined} aria-label="Follow Deepti on Instagram">
         <InstagramMark /><span>Instagram</span>
+      </a>
+      <a href={whatsappUrl} target={isExternal(whatsappUrl) ? "_blank" : undefined} rel={isExternal(whatsappUrl) ? "noopener noreferrer" : undefined} aria-label="Contact Deepti on WhatsApp">
+        <WhatsAppMark /><span>WhatsApp</span>
       </a>
     </aside>
   );

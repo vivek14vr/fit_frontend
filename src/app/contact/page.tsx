@@ -7,7 +7,7 @@ import {
 export const metadata: Metadata = {
   title: "Contact Deepti Sherawat",
   description:
-    "Share your questions and context with Deepti's team, then choose the right booking calendar for your conversation.",
+    "Send a general enquiry to Deepti Sherawat's nutrition practice.",
 };
 
 export default function ContactPage() {

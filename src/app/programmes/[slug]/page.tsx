@@ -6,13 +6,6 @@ import HomePhoto from "@/app/components/home-photo";
 import { getProgramme, programmeData } from "@/app/components/marketing-data";
 import s from "@/app/components/public-pages.module.css";
 
-const programmeImages: Record<string, string> = {
-  gut: "/programmes/gut.jpg",
-  liver: "/programmes/liver.jpg",
-  "weight-metabolic": "/programmes/metabolic.jpg",
-  skin: "/programmes/skin.jpg",
-};
-
 export function generateStaticParams() {
   return programmeData.map((programme) => ({ slug: programme.slug }));
 }
@@ -52,7 +45,7 @@ export default async function ProgrammeDetailPage({ params }: { params: Promise<
             <Link className="marketing-button marketing-button-primary" href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link>
           </div>
           <div className={`marketing-detail-image ${programme.imageClass}`}>
-            <HomePhoto src={programmeImages[programme.slug]} alt={`Fresh ingredients for the ${programme.title} programme`} sizes="(max-width: 900px) calc(100vw - 40px), 46vw" />
+            <HomePhoto src={programme.image} alt={`Fresh ingredients for the ${programme.title} programme`} sizes="(max-width: 900px) calc(100vw - 40px), 46vw" />
           </div>
         </div>
       </section>

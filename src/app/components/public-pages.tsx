@@ -262,24 +262,17 @@ export function TestimonialsPageContent() {
 }
 
 export function ProgrammesPageContent() {
-  const programmeImages: Record<string, string> = {
-    gut: "/programmes/gut.jpg",
-    liver: "/programmes/liver.jpg",
-    "weight-metabolic": "/programmes/metabolic.jpg",
-    skin: "/programmes/skin.jpg",
-  };
-
   return (
     <section className="public-detail-section">
       <div className="home-shell public-detail-heading">
-        <div><p className="home-section-label">THE METHOD / दीपन DĪPANA</p><h2>Four paths, one personal approach.</h2></div>
+        <div><p className="home-section-label">THE METHOD / दीपन DĪPANA</p><h2>Six paths, one personal approach.</h2></div>
         <p>Choose the concern that brought you here. Every programme begins with context, becomes practical through small experiments, and is reviewed with you over time.</p>
       </div>
       <div className="home-shell programme-landing-grid">
         {programmeData.map((programme) => (
           <article className={`programme-landing-card programme-landing-card-${programme.colour}`} key={programme.slug}>
             <div className="programme-landing-image">
-              <Image src={programmeImages[programme.slug]} alt={`Fresh food for the ${programme.title} programme`} fill sizes="(max-width: 700px) calc(100vw - 40px), 50vw" />
+              <Image src={programme.image} alt={`Fresh food for the ${programme.title} programme`} fill sizes="(max-width: 700px) calc(100vw - 40px), 50vw" />
             </div>
             <div className="programme-landing-card-body">
               <div className="programme-landing-topline"><span>{programme.number}</span><Link href={`/programmes/${programme.slug}`} aria-label={`Explore ${programme.title}`}>↗</Link></div>
@@ -317,26 +310,11 @@ export function ContactPageContent() {
     <section className="public-detail-section contact-form-section">
       <div className="home-shell contact-form-layout">
         <div className="contact-form-card">
-          <p className="home-section-label">YOUR DETAILS</p>
-          <h2>Where should we reach you?</h2>
-          <p className="contact-form-intro">Deepti’s team uses these details to reply to your enquiry and share the right booking information.</p>
-          <div className="contact-form-notice" role="note"><span aria-hidden="true">i</span><p><strong>Submit the form to continue to booking.</strong> The matching calendar link will appear after you share your details.</p></div>
+          <p className="home-section-label">SEND AN ENQUIRY</p>
+          <h2>Tell us what is on your mind.</h2>
+          <p className="contact-form-intro">Share a little context, ask a question or tell us what you would like to understand. This form is for general enquiries and is separate from the 1:1 health check-in.</p>
           <ContactEnquiryForm />
         </div>
-        <aside className="contact-assessment-card">
-          <p className="home-section-label">YOUR ASSESSMENT</p>
-          <h2>What we can explore together</h2>
-          <div className="contact-assessment-summary"><span aria-hidden="true">✓</span><div><strong>Personalised Health Assessment</strong><p>With Deepti and her team of qualified nutritionists.</p></div></div>
-          <p className="contact-assessment-label">WHAT IS REVIEWED IN IT</p>
-          <ul>
-            <li>Your current priorities</li>
-            <li>Your food habits and routines</li>
-            <li>Your symptoms and health history</li>
-            <li>Relevant health reports or markers</li>
-            <li>Your previous attempts and what felt useful</li>
-          </ul>
-          <div className="contact-assessment-note"><strong>No payment details are requested here.</strong><p>Consultation options, fees and any programme decision are discussed separately.</p></div>
-        </aside>
       </div>
     </section>
   );
@@ -363,10 +341,10 @@ export function ConsultationPageContent() {
     <section className="public-detail-section consultation-contact-section">
       <div className="home-shell consultation-contact-card contact-form-card">
         <p className="home-section-label">THE FIRST STEP</p>
-        <h2>Where should we reach you?</h2>
-        <p className="contact-form-intro">Share a little context about what brings you here. After you submit the form, you can choose a time for your 1:1 conversation.</p>
-        <div className="contact-form-notice" role="note"><span aria-hidden="true">i</span><p><strong>This form does not take payment.</strong> It simply helps you choose the right booking calendar for your conversation.</p></div>
-        <ContactEnquiryForm />
+        <h2>Start with a considered conversation.</h2>
+        <p className="contact-form-intro">Answer a few questions about your goals, routines and starting point. Your details go to Deepti’s practice first, so your consultation can begin with useful context.</p>
+        <div className="consultation-route-note" role="note"><span aria-hidden="true">✦</span><p><strong>Worldwide online support.</strong> People joining from outside India can choose a scheduling time after the check-in. The India payment step will be added before its scheduling link is released.</p></div>
+        <button className="home-button home-button-primary consultation-start-button" type="button" data-open-lead-quiz>Start the health check-in <span aria-hidden="true">↗</span></button>
       </div>
     </section>
   );
