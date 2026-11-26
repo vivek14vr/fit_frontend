@@ -138,9 +138,19 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   if (status === "loading") {
     return (
-      <main className="dashboard-page dashboard-loading">
-        <div className="dashboard-loading-card">
-          <p>Checking your admin access…</p>
+      <main className="dashboard-page dashboard-admin dashboard-loading" aria-busy="true">
+        <section className="dashboard-loading-card dashboard-loading-panel" aria-labelledby="admin-loading-title">
+          <div className="dashboard-loading-brand" aria-hidden="true">
+            <span className="dashboard-loading-orbit" />
+            <span className="dashboard-loading-mark"><PracticeMark /></span>
+          </div>
+          <p className="dashboard-loading-label">SECURE WORKSPACE</p>
+          <h1 id="admin-loading-title">Preparing your workspace</h1>
+          <p className="dashboard-loading-message" aria-live="polite">Checking your admin access…</p>
+          <div className="dashboard-loading-progress" role="progressbar" aria-label="Checking admin access">
+            <span />
+          </div>
+          <p className="dashboard-loading-note">This should only take a moment.</p>
           <div className="dashboard-loading-actions">
             <button
               className="dashboard-retry-button"
@@ -153,7 +163,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               Sign out
             </button>
           </div>
-        </div>
+        </section>
       </main>
     );
   }

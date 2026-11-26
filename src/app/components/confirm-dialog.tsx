@@ -4,6 +4,7 @@ import { useModalAccessibility } from "@/app/components/use-modal-accessibility"
 
 type ConfirmDialogProps = {
   isOpen: boolean;
+  eyebrow?: string;
   title: string;
   description: string;
   confirmLabel: string;
@@ -13,6 +14,7 @@ type ConfirmDialogProps = {
 
 export function ConfirmDialog({
   isOpen,
+  eyebrow = "UNSAVED CHANGES",
   title,
   description,
   confirmLabel,
@@ -42,7 +44,7 @@ export function ConfirmDialog({
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
       >
-        <p className="dashboard-panel-label">UNSAVED CHANGES</p>
+        <p className="dashboard-panel-label">{eyebrow}</p>
         <h2 id="confirm-dialog-title">{title}</h2>
         <p>{description}</p>
         <div className="confirm-dialog-actions">

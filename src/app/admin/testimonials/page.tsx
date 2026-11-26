@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import { useModalAccessibility } from "@/app/components/use-modal-accessibility";
+import { ConfirmDialog } from "@/app/components/confirm-dialog";
 import {
   testimonialCategoryLabel,
   testimonialCategoryOptions,
@@ -91,6 +92,8 @@ export default function AdminTestimonialsPage() {
   const [modalError, setModalError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [archivingId, setArchivingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Testimonial | null>(null);
   const pendingUploadObjectKeyRef = useRef<string | null>(null);
   const modalRef = useModalAccessibility(Boolean(editing), closeModal);
 
@@ -299,7 +302,7 @@ export default function AdminTestimonialsPage() {
   }
 
   async function archive(testimonial: Testimonial) {
-    if (archivingId || !window.confirm(`Archive “${testimonial.title}”? It will disappear from the public site.`)) return;
+    if (archivingId || deletingId || !window.confirm(`Archive “${testimonial.title}”? It will disappear from the public site.`)) return;
     setArchivingId(testimonial.id);
     setError("");
     try {
@@ -312,6 +315,30 @@ export default function AdminTestimonialsPage() {
       setError(archiveError instanceof Error ? archiveError.message : "Unable to archive testimonial.");
     } finally {
       setArchivingId(null);
+    }
+  }
+
+  function requestDelete(testimonial: Testimonial) {
+    if (archivingId || deletingId) return;
+    setDeleteTarget(testimonial);
+  }
+
+  async function deleteTestimonial() {
+    const testimonial = deleteTarget;
+    if (!testimonial || deletingId) return;
+    setDeleteTarget(null);
+    setDeletingId(testimonial.id);
+    setError("");
+    try {
+      const response = await fetchWithAuth(`${apiUrl}/admin/testimonials/${encodeURIComponent(testimonial.id)}/permanent`, { method: "DELETE" });
+      const body = (await response.json().catch(() => null)) as ApiMessage | null;
+      if (!response.ok) throw new Error(getErrorMessage(body, "Unable to delete testimonial."));
+      setFeedback("Testimonial deleted permanently.");
+      setReloadKey((current) => current + 1);
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : "Unable to delete testimonial.");
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -346,7 +373,7 @@ export default function AdminTestimonialsPage() {
                     <td><span className={`${styles.status} ${styles[`status-${testimonial.status}`]}`}>{testimonial.status}</span></td>
                     <td>{testimonial.sortOrder}</td>
                     <td>{formatDate(testimonial.updatedAt ?? testimonial.createdAt)}</td>
-                    <td><div className={styles.actions}><button type="button" onClick={() => openEdit(testimonial)}>Edit</button>{testimonial.status !== "archived" ? <button type="button" onClick={() => void archive(testimonial)} disabled={archivingId === testimonial.id}>{archivingId === testimonial.id ? "Archiving…" : "Archive"}</button> : null}</div></td>
+                    <td><div className={styles.actions}><button type="button" onClick={() => openEdit(testimonial)} disabled={Boolean(archivingId || deletingId)}>Edit</button>{testimonial.status !== "archived" ? <button type="button" onClick={() => void archive(testimonial)} disabled={Boolean(archivingId || deletingId)}>{archivingId === testimonial.id ? "Archiving…" : "Archive"}</button> : null}<button className={styles.deleteAction} type="button" onClick={() => requestDelete(testimonial)} disabled={Boolean(archivingId || deletingId)}>{deletingId === testimonial.id ? "Deleting…" : "Delete"}</button></div></td>
                   </tr>
                 ))}</tbody>
               </table>
@@ -354,6 +381,16 @@ export default function AdminTestimonialsPage() {
           )}
         </article>
       </div>
+
+      <ConfirmDialog
+        isOpen={Boolean(deleteTarget)}
+        eyebrow="PERMANENT DELETE"
+        title={`Delete “${deleteTarget?.title ?? "this testimonial"}”?`}
+        description="This permanently removes the testimonial and its uploaded image. Use Archive if you may want to restore it later."
+        confirmLabel="Delete permanently"
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={() => void deleteTestimonial()}
+      />
 
       {editing ? (
         <div className="users-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target) closeModal(); }}>
