@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   apiUrl,
   clearStoredAuth,
@@ -43,6 +43,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [status, setStatus] = useState<AdminStatus>("loading");
   const [retryCount, setRetryCount] = useState(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const sidebarCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const sidebarToggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isLoginRoute) {
@@ -118,6 +121,29 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       controller.abort();
     };
   }, [isLoginRoute, retryCount, router]);
+
+  useEffect(() => {
+    if (!isSidebarOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsSidebarOpen(false);
+        sidebarToggleRef.current?.focus();
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+    sidebarCloseButtonRef.current?.focus();
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isSidebarOpen]);
 
   function handleLogout() {
     clearStoredAuth();
@@ -212,6 +238,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const isInstances = pathname === "/admin/instances";
   const isTestimonials = pathname === "/admin/testimonials";
 
+  function closeSidebar() {
+    setIsSidebarOpen(false);
+  }
+
   return (
     <main className="dashboard-page dashboard-admin">
       <header className="dashboard-topbar">
@@ -223,6 +253,21 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </span>
             <small>AYURVEDIC &amp; FUNCTIONAL NUTRITION</small>
           </Link>
+          <button
+            ref={sidebarToggleRef}
+            className="dashboard-sidebar-toggle"
+            type="button"
+            aria-controls="admin-sidebar"
+            aria-expanded={isSidebarOpen}
+            onClick={() => setIsSidebarOpen((open) => !open)}
+          >
+            <span className="dashboard-sidebar-toggle-icon" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+            <span>{isSidebarOpen ? "Close menu" : "Menu"}</span>
+          </button>
           <div className="dashboard-account">
             <button className="dashboard-notification" type="button" aria-label="Notifications">
               <NotificationMark />
@@ -242,8 +287,33 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
       </header>
 
+      {isSidebarOpen ? (
+        <button
+          className="dashboard-sidebar-scrim"
+          type="button"
+          aria-label="Close admin navigation"
+          onClick={closeSidebar}
+        />
+      ) : null}
+
       <div className="dashboard-shell dashboard-layout">
-        <aside className="dashboard-sidebar" aria-label="Admin navigation">
+        <aside
+          id="admin-sidebar"
+          className={`dashboard-sidebar${isSidebarOpen ? " is-open" : ""}`}
+          aria-label="Admin navigation"
+        >
+          <div className="dashboard-sidebar-mobile-heading">
+            <span>Admin navigation</span>
+            <button
+              ref={sidebarCloseButtonRef}
+              className="dashboard-sidebar-close"
+              type="button"
+              aria-label="Close admin navigation"
+              onClick={closeSidebar}
+            >
+              ×
+            </button>
+          </div>
           <p className="dashboard-sidebar-label">ADMIN WORKSPACE</p>
           <p className="dashboard-sidebar-context">Practice operations</p>
           <nav className="dashboard-nav">
@@ -251,6 +321,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               className={isOverview ? "dashboard-nav-active" : undefined}
               href="/admin/dashboard"
               aria-current={isOverview ? "page" : undefined}
+              onClick={closeSidebar}
             >
               Overview
             </Link>
@@ -259,6 +330,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               className={`dashboard-nav-leads${isLeads ? " dashboard-nav-active" : ""}`}
               href="/admin/leads"
               aria-current={isLeads ? "page" : undefined}
+              onClick={closeSidebar}
             >
               Leads
             </Link>
@@ -267,6 +339,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               className={`dashboard-nav-users${isUsers ? " dashboard-nav-active" : ""}`}
               href="/admin/users"
               aria-current={isUsers ? "page" : undefined}
+              onClick={closeSidebar}
             >
               Users
             </Link>
@@ -275,6 +348,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               className={`dashboard-nav-nutritionists${isNutritionists ? " dashboard-nav-active" : ""}`}
               href="/admin/nutritionists"
               aria-current={isNutritionists ? "page" : undefined}
+              onClick={closeSidebar}
             >
               Nutritionists
             </Link>
@@ -283,6 +357,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               className={`dashboard-nav-plans${isPlans ? " dashboard-nav-active" : ""}`}
               href="/admin/plans"
               aria-current={isPlans ? "page" : undefined}
+              onClick={closeSidebar}
             >
               Plans
             </Link>
@@ -290,6 +365,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               className={`dashboard-nav-instances${isInstances ? " dashboard-nav-active" : ""}`}
               href="/admin/instances"
               aria-current={isInstances ? "page" : undefined}
+              onClick={closeSidebar}
             >
               Assigned forms
             </Link>
@@ -298,6 +374,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               className={`dashboard-nav-testimonials${isTestimonials ? " dashboard-nav-active" : ""}`}
               href="/admin/testimonials"
               aria-current={isTestimonials ? "page" : undefined}
+              onClick={closeSidebar}
             >
               Testimonials
             </Link>
