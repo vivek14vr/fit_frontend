@@ -10384,3 +10384,319 @@ h2 {
     grid-column: auto;
   }
 }
+
+/* Admin responsive hardening. Keep the app frame fluid, give the compact
+   navigation real touch targets, and let dense data surfaces scroll inside
+   their cards instead of widening the page. */
+.dashboard-admin {
+  overflow-x: clip;
+}
+
+.dashboard-admin .dashboard-shell,
+.dashboard-admin .dashboard-topbar-inner,
+.dashboard-admin .dashboard-layout,
+.dashboard-admin .dashboard-content {
+  min-width: 0;
+}
+
+.dashboard-admin .dashboard-shell {
+  width: 100%;
+  max-width: none;
+}
+
+.dashboard-admin .dashboard-brand-lockup,
+.dashboard-admin .dashboard-wordmark,
+.dashboard-admin .dashboard-account,
+.dashboard-admin .dashboard-account-copy,
+.dashboard-admin .dashboard-heading-row > div,
+.dashboard-admin .users-roster-toolbar > div {
+  min-width: 0;
+}
+
+.dashboard-admin .dashboard-account-copy {
+  flex: 0 1 auto;
+}
+
+.dashboard-admin .dashboard-account-name {
+  max-width: clamp(100px, 18vw, 180px);
+}
+
+.dashboard-admin .dashboard-notification,
+.dashboard-admin .dashboard-logout,
+.dashboard-admin .users-modal-close,
+.dashboard-admin .users-create-button,
+.dashboard-admin .users-submit,
+.dashboard-admin .users-pagination-button,
+.dashboard-admin .users-assignment-control {
+  min-height: 44px;
+}
+
+.dashboard-admin .dashboard-notification {
+  min-width: 44px;
+}
+
+.dashboard-admin .users-roster-card,
+.dashboard-admin .dashboard-feature-panel,
+.dashboard-admin .dashboard-metric {
+  min-width: 0;
+}
+
+.dashboard-admin .users-roster-card {
+  overflow: hidden;
+}
+
+.dashboard-admin .users-roster-toolbar {
+  flex-wrap: wrap;
+}
+
+.dashboard-admin .users-roster-toolbar > span {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.dashboard-admin .users-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.dashboard-admin .users-form,
+.dashboard-admin .users-form > * {
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-admin .dashboard-content {
+    padding-right: clamp(20px, 3vw, 36px);
+    padding-left: clamp(20px, 3vw, 36px);
+  }
+
+  .dashboard-admin .dashboard-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-admin .dashboard-feature-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .dashboard-admin .dashboard-shell {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .dashboard-admin .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-admin .dashboard-sidebar {
+    position: static;
+    height: auto;
+    min-height: 0;
+    border-right: 0;
+    padding: 20px 16px;
+  }
+
+  .dashboard-admin .dashboard-sidebar-label,
+  .dashboard-admin .dashboard-sidebar-context {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .dashboard-admin .dashboard-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dashboard-admin .dashboard-nav-group-label {
+    flex: 0 0 100%;
+    margin: 14px 0 0;
+  }
+
+  .dashboard-admin .dashboard-nav a,
+  .dashboard-admin .dashboard-nav .dashboard-nav-static {
+    flex: 1 1 calc(50% - 4px);
+    min-width: min(220px, calc(50% - 4px));
+  }
+
+  .dashboard-admin .dashboard-content {
+    padding: 28px 20px 56px;
+  }
+
+  .dashboard-admin .dashboard-heading-row {
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .dashboard-admin .users-create-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .dashboard-admin .users-roster-card {
+    margin-top: 32px;
+    padding: 22px;
+  }
+
+  .dashboard-admin .users-search {
+    max-width: none;
+  }
+
+  .dashboard-admin .dashboard-feature-panel {
+    padding: 24px;
+  }
+
+  .dashboard-admin .dashboard-action {
+    flex: 1 1 220px;
+    justify-content: center;
+  }
+
+  .dashboard-admin .users-modal-backdrop {
+    place-items: start center;
+    overflow-y: auto;
+    padding: 12px;
+  }
+
+  .dashboard-admin .users-modal {
+    width: min(100%, 760px);
+    max-height: calc(100dvh - 24px);
+    margin: 0;
+    padding: 24px;
+    scrollbar-gutter: stable;
+  }
+
+  .dashboard-admin .users-modal-heading {
+    gap: 14px;
+  }
+
+  .dashboard-admin .users-modal-close {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 680px) {
+  .dashboard-admin .dashboard-topbar-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .dashboard-admin .dashboard-wordmark {
+    max-width: 100%;
+  }
+
+  .dashboard-admin .dashboard-wordmark small {
+    max-width: calc(100vw - 64px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dashboard-admin .dashboard-account {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .dashboard-admin .dashboard-account-copy {
+    flex: 1 1 auto;
+    margin-right: auto;
+  }
+
+  .dashboard-admin .dashboard-account-name {
+    max-width: min(42vw, 220px);
+  }
+}
+
+@media (max-width: 560px) {
+  .dashboard-admin .dashboard-content {
+    padding: 24px 16px 48px;
+  }
+
+  .dashboard-admin .dashboard-sidebar {
+    padding: 18px 16px;
+  }
+
+  .dashboard-admin .dashboard-metrics {
+    grid-template-columns: 1fr;
+    margin-top: 24px;
+  }
+
+  .dashboard-admin .dashboard-metric {
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .dashboard-admin .dashboard-feature-panel {
+    padding: 20px;
+  }
+
+  .dashboard-admin .users-roster-card {
+    padding: 18px;
+  }
+
+  .dashboard-admin .users-roster-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dashboard-admin .users-roster-toolbar > span {
+    align-self: flex-start;
+  }
+
+  .dashboard-admin .users-modal {
+    padding: 20px;
+  }
+
+  .dashboard-admin .users-modal-heading h2 {
+    font-size: clamp(1.9rem, 9vw, 2.5rem);
+  }
+
+  .dashboard-admin .users-modal .users-form {
+    gap: 16px;
+    padding-top: 18px;
+  }
+
+  .dashboard-admin .users-modal .users-submit {
+    width: 100%;
+  }
+
+  .dashboard-admin .lead-detail-grid > div,
+  .dashboard-admin .lead-follow-up-editor {
+    padding: 14px;
+  }
+
+  .dashboard-admin .instance-question-types {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-admin .dashboard-nav a,
+  .dashboard-admin .dashboard-nav .dashboard-nav-static {
+    flex-basis: 100%;
+    min-width: 100%;
+  }
+
+  .dashboard-admin .users-modal-backdrop {
+    padding: 8px;
+  }
+
+  .dashboard-admin .users-modal {
+    width: 100%;
+    max-height: calc(100dvh - 16px);
+    padding: 18px;
+    border-radius: 12px;
+  }
+
+  .dashboard-admin .dashboard-account-name {
+    max-width: none;
+  }
+}

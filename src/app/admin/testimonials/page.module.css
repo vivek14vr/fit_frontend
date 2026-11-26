@@ -12,7 +12,7 @@
 .status-draft { border-color: #c4a56d; color: #80602d; }
 .status-archived { border-color: #b5aaa5; color: #766b67; }
 .actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
-.actions button { min-height: 36px; padding: 6px 9px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; font: inherit; font-size: 12px; }
+.actions button { min-height: 44px; padding: 6px 9px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; font: inherit; font-size: 12px; }
 .actions button:hover:not(:disabled) { border-color: var(--teal); color: var(--teal); }
 .actions button:last-child:hover:not(:disabled) { border-color: var(--kumkum); color: var(--kumkum); }
 .actions button:disabled { cursor: wait; opacity: .55; }
@@ -28,7 +28,7 @@
 .categoryFieldset { grid-column: 1 / -1; }
 .categoryOptions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 14px; }
 .fieldHelp { margin: -2px 0 2px; color: var(--muted); font-size: 12px; line-height: 1.4; }
-.check { display: flex; min-height: 34px; align-items: center; gap: 8px; color: var(--ink); font-size: 14px; }
+.check { display: flex; min-height: 44px; align-items: center; gap: 8px; color: var(--ink); font-size: 14px; }
 .check input { width: 17px; height: 17px; accent-color: var(--teal); }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
