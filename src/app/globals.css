@@ -10519,8 +10519,9 @@ h2 {
 
   .dashboard-admin .dashboard-nav a,
   .dashboard-admin .dashboard-nav .dashboard-nav-static {
-    flex: 1 1 calc(50% - 4px);
-    min-width: min(220px, calc(50% - 4px));
+    flex: 0 0 calc(50% - 4px);
+    width: calc(50% - 4px);
+    min-width: 0;
   }
 
   .dashboard-admin .dashboard-content {
@@ -10682,7 +10683,8 @@ h2 {
   .dashboard-admin .dashboard-nav a,
   .dashboard-admin .dashboard-nav .dashboard-nav-static {
     flex-basis: 100%;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
   }
 
   .dashboard-admin .users-modal-backdrop {
