@@ -342,9 +342,8 @@ export function ConsultationPageContent() {
       <div className="home-shell consultation-contact-card contact-form-card">
         <p className="home-section-label">THE FIRST STEP</p>
         <h2>Start with a considered conversation.</h2>
-        <p className="contact-form-intro">Answer a few questions about your goals, routines and starting point. Your details go to Deepti’s practice first, so your consultation can begin with useful context.</p>
-        <div className="consultation-route-note" role="note"><span aria-hidden="true">✦</span><p><strong>Worldwide online support.</strong> People joining from outside India can choose a scheduling time after the check-in. The India payment step will be added before its scheduling link is released.</p></div>
-        <button className="home-button home-button-primary consultation-start-button" type="button" data-open-lead-quiz>Start the health check-in <span aria-hidden="true">↗</span></button>
+        <p className="contact-form-intro">Share your name, email and phone number, then choose your country code. We will show the appropriate next step before you select a time.</p>
+        <button className="home-button home-button-primary consultation-start-button" type="button" data-open-consultation-booking>Schedule a 1:1 with Deepti <span aria-hidden="true">↗</span></button>
       </div>
     </section>
   );

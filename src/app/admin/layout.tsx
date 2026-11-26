@@ -202,6 +202,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   const isOverview = pathname === "/admin/dashboard";
+  const isLeads = pathname === "/admin/leads";
   const isUsers = pathname === "/admin/users";
   const isNutritionists = pathname === "/admin/nutritionists";
   const isPlans = pathname === "/admin/plans";
@@ -248,6 +249,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               aria-current={isOverview ? "page" : undefined}
             >
               Overview
+            </Link>
+            <span className="dashboard-nav-group-label">LEAD MANAGEMENT</span>
+            <Link
+              className={`dashboard-nav-leads${isLeads ? " dashboard-nav-active" : ""}`}
+              href="/admin/leads"
+              aria-current={isLeads ? "page" : undefined}
+            >
+              Leads
             </Link>
             <span className="dashboard-nav-group-label">USER ACCOUNTS</span>
             <Link
