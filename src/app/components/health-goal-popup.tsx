@@ -18,7 +18,7 @@ const GOALS = [
 const TIMELINES = ["As soon as possible", "Within the next month", "I am exploring for now"] as const;
 const REQUEST_TIMEOUT_MS = 12_000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_PATTERN = /^[0-9+()\-\s]{7,25}$/;
+const PHONE_PATTERN = /^(?=.*\d)[0-9+()\-\s]{7,25}$/;
 
 type HealthGoalDraft = {
   concerns: BodyConcernId[];

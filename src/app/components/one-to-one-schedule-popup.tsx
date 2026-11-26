@@ -7,7 +7,7 @@ import s from "./one-to-one-schedule-popup.module.css";
 
 const REQUEST_TIMEOUT_MS = 12_000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_PATTERN = /^[0-9()\-\s]{5,20}$/;
+const PHONE_PATTERN = /^(?=.*\d)[0-9()\-\s]{5,20}$/;
 
 const COUNTRY_CODES = [
   { code: "+91", country: "India" },

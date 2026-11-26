@@ -82,16 +82,20 @@
 
 @media (max-width: 600px) {
   .rail {
-    right: 12px;
-    bottom: calc(140px + env(safe-area-inset-bottom));
-    gap: 10px;
+    right: 14px;
+    bottom: calc(78px + env(safe-area-inset-bottom));
+    flex-direction: row;
+    gap: 8px;
   }
 
   .rail a {
-    width: 54px;
-    height: 54px;
-    flex-basis: 54px;
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+    border-width: 1.5px;
   }
+
+  .rail svg { width: 22px; height: 22px; }
 
   .rail span { display: none; }
 }

@@ -6,6 +6,7 @@ import {
   type FormEvent,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useModalAccessibility } from "@/app/components/use-modal-accessibility";
@@ -79,7 +80,8 @@ export default function AdminTestimonialsPage() {
   const [modalError, setModalError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [archivingId, setArchivingId] = useState<string | null>(null);
-  const modalRef = useModalAccessibility(Boolean(editing), () => setEditing(null));
+  const pendingUploadObjectKeyRef = useRef<string | null>(null);
+  const modalRef = useModalAccessibility(Boolean(editing), closeModal);
 
   useEffect(() => {
     let cancelled = false;
@@ -141,8 +143,25 @@ export default function AdminTestimonialsPage() {
     setModalError("");
   }
 
+  async function discardUploadedObject(objectKey = pendingUploadObjectKeyRef.current) {
+    if (!objectKey) return true;
+    try {
+      const response = await fetchWithAuth(`${apiUrl}/admin/testimonials/upload`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ objectKey }),
+      });
+      if (!response.ok) return false;
+      if (pendingUploadObjectKeyRef.current === objectKey) pendingUploadObjectKeyRef.current = null;
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   function closeModal() {
     if (isSaving) return;
+    void discardUploadedObject();
     setEditing(null);
     setModalError("");
   }
@@ -177,6 +196,9 @@ export default function AdminTestimonialsPage() {
   }
 
   async function uploadFile(file: File) {
+    if (!(await discardUploadedObject())) {
+      throw new Error("The previous image upload could not be cleaned up. Please try again.");
+    }
     const response = await fetchWithAuth(`${apiUrl}/admin/testimonials/upload-url`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -191,6 +213,7 @@ export default function AdminTestimonialsPage() {
       body: file,
     });
     if (!uploadResponse.ok) throw new Error("The image could not be uploaded to storage. Check the S3 CORS policy.");
+    pendingUploadObjectKeyRef.current = body.objectKey;
     return { publicUrl: body.publicUrl, objectKey: body.objectKey };
   }
 
@@ -209,6 +232,7 @@ export default function AdminTestimonialsPage() {
     setIsSaving(true);
     setModalError("");
     setFeedback("");
+    let uploadedObjectKey: string | null = null;
     try {
       let imageUrl = form.imageUrl.trim();
       let objectKey = form.objectKey.trim() || undefined;
@@ -216,6 +240,7 @@ export default function AdminTestimonialsPage() {
         const upload = await uploadFile(form.file);
         imageUrl = upload.publicUrl;
         objectKey = upload.objectKey;
+        uploadedObjectKey = upload.objectKey;
       }
 
       const payload = {
@@ -234,7 +259,11 @@ export default function AdminTestimonialsPage() {
         body: JSON.stringify(payload),
       });
       const body = (await response.json().catch(() => null)) as ApiMessage | null;
-      if (!response.ok) throw new Error(getErrorMessage(body, "Unable to save testimonial."));
+      if (!response.ok) {
+        if (uploadedObjectKey) await discardUploadedObject(uploadedObjectKey);
+        throw new Error(getErrorMessage(body, "Unable to save testimonial."));
+      }
+      pendingUploadObjectKeyRef.current = null;
       setEditing(null);
       setFeedback(isCreate ? "Testimonial added." : "Testimonial updated.");
       setReloadKey((current) => current + 1);

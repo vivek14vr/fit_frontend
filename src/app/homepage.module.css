@@ -898,10 +898,16 @@
  .aboutGrid { gap:32px; }
  .aboutIntro h2 { margin-bottom:30px; }
  .aboutProof { grid-template-columns:1fr; padding-top:0; border-top:0; }
- .aboutProof li,.aboutProof li:first-child,.aboutProof li:last-child { display:grid; grid-template-columns:95px 1fr; align-items:center; padding:13px 0; border-right:0; border-bottom:1px solid rgba(255,255,255,.18); }
+ .aboutProof li,.aboutProof li:first-child,.aboutProof li:last-child { display:grid; grid-template-columns:minmax(0,8.5rem) minmax(0,1fr); column-gap:14px; align-items:center; padding:13px 0; border-right:0; border-bottom:1px solid rgba(255,255,255,.18); }
  .aboutProof li:first-child { border-top:1px solid rgba(255,255,255,.18); }
- .aboutProof strong { margin:0; font-size:26px; }
+ .aboutProof strong { min-width:0; margin:0; color:#e3b449; font-size:clamp(22px,6.8vw,26px); line-height:1; white-space:nowrap; }
+ .aboutProof span { min-width:0; overflow-wrap:normal; }
  .aboutCopy > p { font-size:16px; }
+}
+
+@media(max-width:380px) {
+ .aboutProof li,.aboutProof li:first-child,.aboutProof li:last-child { grid-template-columns:minmax(0,7.5rem) minmax(0,1fr); column-gap:12px; }
+ .aboutProof strong { font-size:22px; }
 }
 
 /* Visual specialty mosaic: all areas are visible without a click or hidden panel. */

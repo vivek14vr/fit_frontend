@@ -55,7 +55,12 @@ export default function TestimonialCarousel({
 
   useEffect(() => {
     const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), 8_000);
+    let isActive = true;
+    let timedOut = false;
+    const timeoutId = window.setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, 8_000);
 
     async function loadTestimonials() {
       try {
@@ -71,11 +76,16 @@ export default function TestimonialCarousel({
           setActiveIndex(0);
         }
       } catch (requestError) {
-        if (!controller.signal.aborted) {
-          setError(requestError instanceof Error ? requestError.message : "Unable to load testimonials.");
-        }
+        if (!isActive) return;
+        setError(
+          timedOut
+            ? "Stories are taking too long to load. Please try again."
+            : requestError instanceof Error
+              ? requestError.message
+              : "Unable to load testimonials.",
+        );
       } finally {
-        if (!controller.signal.aborted) setIsLoading(false);
+        if (isActive) setIsLoading(false);
       }
     }
 
@@ -85,6 +95,7 @@ export default function TestimonialCarousel({
       void loadTestimonials();
     }, 0);
     return () => {
+      isActive = false;
       controller.abort();
       window.clearTimeout(timeoutId);
       window.clearTimeout(startId);
