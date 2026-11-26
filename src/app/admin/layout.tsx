@@ -207,6 +207,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const isNutritionists = pathname === "/admin/nutritionists";
   const isPlans = pathname === "/admin/plans";
   const isInstances = pathname === "/admin/instances";
+  const isTestimonials = pathname === "/admin/testimonials";
 
   return (
     <main className="dashboard-page dashboard-admin">
@@ -288,6 +289,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               aria-current={isInstances ? "page" : undefined}
             >
               Assigned forms
+            </Link>
+            <span className="dashboard-nav-group-label">PUBLISHING</span>
+            <Link
+              className={`dashboard-nav-testimonials${isTestimonials ? " dashboard-nav-active" : ""}`}
+              href="/admin/testimonials"
+              aria-current={isTestimonials ? "page" : undefined}
+            >
+              Testimonials
             </Link>
           </nav>
           <div className="dashboard-sidebar-note">

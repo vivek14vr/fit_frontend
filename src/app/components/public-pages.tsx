@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import ContactEnquiryForm from "./contact-enquiry-form";
 import { MarketingFooter, MarketingHeader } from "./marketing-chrome";
 import { programmeData } from "./marketing-data";
+import TestimonialCarousel from "./testimonial-carousel";
 import s from "./public-pages.module.css";
 
 type PublicPageLayoutProps = {
@@ -228,16 +229,14 @@ export function TestimonialsPageContent() {
           </div>
           <p>Health stories are personal. This page will only publish reflections that a client has approved, with the level of identification they are comfortable sharing.</p>
         </div>
-        <div className="home-shell testimonials-coming-soon" role="status">
-          <div className="testimonials-coming-soon-index" aria-hidden="true">01</div>
-          <div>
-            <p className="home-card-kicker">STORIES IN PREPARATION</p>
-            <h3>Approved client reflections will live here.</h3>
-            <p>We are preparing this collection with care. No quote, name, photograph or health experience will be published without clear permission from the person behind it.</p>
-          </div>
-          <Link className="home-text-link" href="/consultation">Start your own conversation <span aria-hidden="true">↗</span></Link>
-        </div>
       </section>
+
+      <TestimonialCarousel
+        placement="testimonials"
+        variant="page"
+        heading="Approved stories, in their own words."
+        description="The collection below is managed by the practice team. Each image is published only after the client has given permission for it to be shared."
+      />
 
       <section className="public-detail-section public-detail-section-soft testimonials-principles-section">
         <div className="home-shell public-detail-heading">

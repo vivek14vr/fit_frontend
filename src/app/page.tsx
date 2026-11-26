@@ -12,6 +12,7 @@ import BrandFlowerMark from "./components/brand-flower-mark";
 import { useHomeChoreography } from "./components/use-home-choreography";
 import StickySocialLinks from "./components/sticky-social-links";
 import SpecialtyStudio from "./components/specialty-studio";
+import TestimonialCarousel from "./components/testimonial-carousel";
 
 const steps = [
   ["Listen first", "Bring the questions that have stayed with you, your food patterns, your routines and the context around them. The first conversation is about understanding before recommending."],
@@ -231,6 +232,12 @@ export default function Home() {
           <div className={s.journeySteps} data-home-reveal data-reveal="right" style={{ "--journey-progress": step === null ? 0 : (step + 1) / steps.length } as CSSProperties}>{steps.map(([title, description], index) => <div className={`${s.step}${step === index ? ` ${s.stepActive}` : ""}`} key={title}><h3><button type="button" aria-expanded={step === index} aria-controls={`step-${index}`} onClick={() => setStep(step === index ? null : index)}><small>0{index + 1}</small>{title}<span aria-hidden="true">{step === index ? "−" : "+"}</span></button></h3><div id={`step-${index}`} hidden={step !== index}><p>{description}</p></div></div>)}</div>
         </section>
 
+        <TestimonialCarousel
+          placement="homepage"
+          variant="homepage"
+          heading="Real experiences, shared with care."
+          description="Approved reflections from people who have worked with Deepti. Every story remains personal; no experience is presented as a promised outcome."
+        />
 
         <section className={`${s.section} ${s.faq}`} data-transition-section="faq"><div data-home-reveal data-reveal="left"><p className={s.eyebrow}>BEFORE WE BEGIN</p><h2>A few things<br /><em>you may wonder.</em></h2></div><div data-home-reveal data-reveal="right">{questions.map(([question, answer]) => <details className={s.question} key={question}><summary>{question}<span aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div></section>
 
