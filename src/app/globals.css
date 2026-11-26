@@ -10718,7 +10718,7 @@ h2 {
   background: var(--app-surface);
   box-shadow: 0 24px 70px rgba(31, 34, 41, 0.09);
   color: var(--app-ink);
-  text-align: left;
+  text-align: center;
 }
 
 .dashboard-loading-brand {
@@ -10727,7 +10727,7 @@ h2 {
   width: 68px;
   height: 68px;
   place-items: center;
-  margin-bottom: 28px;
+  margin: 0 auto 28px;
 }
 
 .dashboard-loading-orbit {
@@ -10809,25 +10809,14 @@ h2 {
 }
 
 .dashboard-loading-panel .dashboard-loading-actions {
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
   margin-top: 28px;
 }
 
-.dashboard-loading-panel .dashboard-retry-button,
 .dashboard-loading-panel .dashboard-loading-signout {
   border-radius: 12px;
   transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
-}
-
-.dashboard-loading-panel .dashboard-retry-button {
-  border-color: var(--app-ink);
-  background: var(--app-ink);
-  color: var(--app-white);
-}
-
-.dashboard-loading-panel .dashboard-retry-button:hover {
-  background: var(--app-coral-deep);
-  border-color: var(--app-coral-deep);
 }
 
 .dashboard-loading-panel .dashboard-loading-signout {

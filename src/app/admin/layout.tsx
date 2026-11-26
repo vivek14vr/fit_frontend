@@ -152,13 +152,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
           <p className="dashboard-loading-note">This should only take a moment.</p>
           <div className="dashboard-loading-actions">
-            <button
-              className="dashboard-retry-button"
-              type="button"
-              onClick={() => setRetryCount((count) => count + 1)}
-            >
-              Try again
-            </button>
             <button className="dashboard-loading-signout" type="button" onClick={handleLogout}>
               Sign out
             </button>
