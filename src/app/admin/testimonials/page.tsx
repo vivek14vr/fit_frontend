@@ -10,10 +10,18 @@ import {
   useState,
 } from "react";
 import { useModalAccessibility } from "@/app/components/use-modal-accessibility";
+import {
+  testimonialCategoryLabel,
+  testimonialCategoryOptions,
+  testimonialPlacementOptions,
+  type TestimonialCategory,
+  type TestimonialPlacement,
+} from "@/app/components/testimonial-data";
 import { apiUrl, fetchWithAuth } from "@/app/lib/auth-client";
 import styles from "./page.module.css";
 
-type Placement = "homepage" | "testimonials";
+type Placement = TestimonialPlacement;
+type Category = TestimonialCategory;
 type Status = "draft" | "published" | "archived";
 
 type Testimonial = {
@@ -23,6 +31,7 @@ type Testimonial = {
   imageUrl: string;
   objectKey: string | null;
   placements: Placement[];
+  categories: Category[];
   status: Status;
   sortOrder: number;
   createdAt?: string | null;
@@ -35,6 +44,7 @@ type FormState = {
   imageUrl: string;
   objectKey: string;
   placements: Placement[];
+  categories: Category[];
   status: Status;
   sortOrder: string;
   file: File | null;
@@ -51,6 +61,7 @@ const emptyForm: FormState = {
   imageUrl: "",
   objectKey: "",
   placements: ["testimonials"],
+  categories: [],
   status: "draft",
   sortOrder: "0",
   file: null,
@@ -66,7 +77,7 @@ function formatDate(value?: string | null) {
 }
 
 function placementLabel(placement: Placement) {
-  return placement === "homepage" ? "Homepage" : "Testimonials page";
+  return testimonialPlacementOptions.find((option) => option.value === placement)?.label ?? placement;
 }
 
 export default function AdminTestimonialsPage() {
@@ -123,8 +134,8 @@ export default function AdminTestimonialsPage() {
   }, [form.file, previewUrl]);
 
   function openCreate() {
-    setEditing({ id: "new", title: "New testimonial", altText: "", imageUrl: "", objectKey: null, placements: ["testimonials"], status: "draft", sortOrder: 0 });
-    setForm({ ...emptyForm, placements: ["testimonials"] });
+    setEditing({ id: "new", title: "New testimonial", altText: "", imageUrl: "", objectKey: null, placements: ["testimonials"], categories: [], status: "draft", sortOrder: 0 });
+    setForm({ ...emptyForm, placements: ["testimonials"], categories: [] });
     setModalError("");
   }
 
@@ -136,6 +147,7 @@ export default function AdminTestimonialsPage() {
       imageUrl: testimonial.imageUrl,
       objectKey: testimonial.objectKey ?? "",
       placements: testimonial.placements,
+      categories: testimonial.categories ?? [],
       status: testimonial.status,
       sortOrder: String(testimonial.sortOrder),
       file: null,
@@ -175,6 +187,13 @@ export default function AdminTestimonialsPage() {
       const hasPlacement = current.placements.includes(placement);
       if (hasPlacement && current.placements.length === 1) return current;
       return { ...current, placements: hasPlacement ? current.placements.filter((item) => item !== placement) : [...current.placements, placement] };
+    });
+  }
+
+  function toggleCategory(category: Category) {
+    setForm((current) => {
+      const hasCategory = current.categories.includes(category);
+      return { ...current, categories: hasCategory ? current.categories.filter((item) => item !== category) : [...current.categories, category] };
     });
   }
 
@@ -224,6 +243,10 @@ export default function AdminTestimonialsPage() {
       setModalError("Choose at least one display section.");
       return;
     }
+    if (form.placements.includes("slides") && !form.categories.length) {
+      setModalError("Choose at least one category for programme slides.");
+      return;
+    }
     if (!form.file && !form.imageUrl.trim()) {
       setModalError("Upload an image or provide an HTTPS image URL.");
       return;
@@ -249,6 +272,7 @@ export default function AdminTestimonialsPage() {
         imageUrl,
         ...(objectKey ? { objectKey } : {}),
         placements: form.placements,
+        categories: form.categories,
         status: form.status,
         sortOrder: Number(form.sortOrder) || 0,
       };
@@ -298,7 +322,7 @@ export default function AdminTestimonialsPage() {
         <div className="dashboard-heading-row users-page-heading">
           <div>
             <h1>Testimonials</h1>
-            <p className="dashboard-description">Upload approved client-story images, choose where they appear, and control their order without changing the website code.</p>
+            <p className="dashboard-description">Upload approved client-story images, choose where they appear, assign programme categories and control their order without changing the website code.</p>
           </div>
           <button className="users-create-button" type="button" onClick={openCreate}>Add testimonial <span aria-hidden="true">↗</span></button>
         </div>
@@ -313,11 +337,12 @@ export default function AdminTestimonialsPage() {
           {isLoading ? <p className="users-empty" role="status">Loading testimonials…</p> : testimonials.length === 0 ? <p className="users-empty">No testimonials yet. Add the first approved story image.</p> : (
             <div className="users-table-wrap">
               <table className={`users-table ${styles.table}`}>
-                <thead><tr><th scope="col">Story</th><th scope="col">Placement</th><th scope="col">Status</th><th scope="col">Order</th><th scope="col">Updated</th><th scope="col"><span className={styles.srOnly}>Actions</span></th></tr></thead>
+                <thead><tr><th scope="col">Story</th><th scope="col">Placement</th><th scope="col">Category</th><th scope="col">Status</th><th scope="col">Order</th><th scope="col">Updated</th><th scope="col"><span className={styles.srOnly}>Actions</span></th></tr></thead>
                 <tbody>{testimonials.map((testimonial) => (
                   <tr key={testimonial.id}>
                     <th scope="row"><div className={styles.storyCell}><img src={testimonial.imageUrl} alt="" /><span>{testimonial.title}<small>{testimonial.altText}</small></span></div></th>
                     <td><div className={styles.tags}>{testimonial.placements.map((placement) => <span key={placement}>{placementLabel(placement)}</span>)}</div></td>
+                    <td><div className={styles.tags}>{testimonial.categories?.length ? testimonial.categories.map((category) => <span key={category}>{testimonialCategoryLabel(category)}</span>) : <span>General</span>}</div></td>
                     <td><span className={`${styles.status} ${styles[`status-${testimonial.status}`]}`}>{testimonial.status}</span></td>
                     <td>{testimonial.sortOrder}</td>
                     <td>{formatDate(testimonial.updatedAt ?? testimonial.createdAt)}</td>
@@ -334,7 +359,7 @@ export default function AdminTestimonialsPage() {
         <div className="users-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target) closeModal(); }}>
           <section ref={modalRef} className={`users-modal ${styles.modal}`} role="dialog" aria-modal="true" aria-labelledby="testimonial-editor-title">
             <div className="users-modal-heading">
-              <div><p className="dashboard-panel-label">{editing.id === "new" ? "NEW STORY" : "EDIT STORY"}</p><h2 id="testimonial-editor-title">{editing.id === "new" ? "Add a testimonial" : "Edit testimonial"}</h2><p>The public carousel uses the image, title and accessible alt text saved here.</p></div>
+              <div><p className="dashboard-panel-label">{editing.id === "new" ? "NEW STORY" : "EDIT STORY"}</p><h2 id="testimonial-editor-title">{editing.id === "new" ? "Add a testimonial" : "Edit testimonial"}</h2><p>Choose a destination and, for programme slides, the focus areas where this approved story belongs.</p></div>
               <button className="users-modal-close" type="button" onClick={closeModal} aria-label="Close testimonial editor">×</button>
             </div>
             <form className="users-form" onSubmit={save}>
@@ -346,7 +371,8 @@ export default function AdminTestimonialsPage() {
               <div className="form-field"><label htmlFor="testimonial-alt">Image alt text</label><textarea id="testimonial-alt" value={form.altText} onChange={(event) => updateForm("altText", event.target.value)} maxLength={300} rows={3} required /></div>
               <div className="form-field"><label htmlFor="testimonial-url">Image URL <small>Optional when uploading</small></label><input id="testimonial-url" type="text" inputMode="url" placeholder="https://cdn.example.com/story.webp" value={form.imageUrl} onChange={(event) => updateForm("imageUrl", event.target.value)} /></div>
               <div className={styles.formGrid}>
-                <fieldset className={styles.fieldset}><legend>Display sections</legend>{(["homepage", "testimonials"] as Placement[]).map((placement) => <label key={placement} className={styles.check}><input type="checkbox" checked={form.placements.includes(placement)} onChange={() => togglePlacement(placement)} />{placementLabel(placement)}</label>)}</fieldset>
+                <fieldset className={styles.fieldset}><legend>Display sections</legend>{testimonialPlacementOptions.map(({ value: placement }) => <label key={placement} className={styles.check}><input type="checkbox" checked={form.placements.includes(placement)} onChange={() => togglePlacement(placement)} />{placementLabel(placement)}</label>)}</fieldset>
+                <fieldset className={`${styles.fieldset} ${styles.categoryFieldset}`}><legend>Programme categories</legend><p className={styles.fieldHelp}>Required for Programme slides. Optional elsewhere; unassigned stories appear under General.</p><div className={styles.categoryOptions}>{testimonialCategoryOptions.map(({ value: category }) => <label key={category} className={styles.check}><input type="checkbox" checked={form.categories.includes(category)} onChange={() => toggleCategory(category)} />{testimonialCategoryLabel(category)}</label>)}</div></fieldset>
                 <div className="form-field"><label htmlFor="testimonial-status">Status</label><select id="testimonial-status" value={form.status} onChange={(event) => updateForm("status", event.target.value as Status)}><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></div>
                 <div className="form-field"><label htmlFor="testimonial-order">Display order</label><input id="testimonial-order" type="number" min="0" max="9999" step="1" value={form.sortOrder} onChange={(event) => updateForm("sortOrder", event.target.value)} /></div>
               </div>

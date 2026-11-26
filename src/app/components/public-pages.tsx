@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import ContactEnquiryForm from "./contact-enquiry-form";
 import { MarketingFooter, MarketingHeader } from "./marketing-chrome";
 import { programmeData } from "./marketing-data";
-import TestimonialCarousel from "./testimonial-carousel";
+import TestimonialCategoryLibrary from "./testimonial-category-library";
 import s from "./public-pages.module.css";
 
 type PublicPageLayoutProps = {
@@ -231,12 +231,7 @@ export function TestimonialsPageContent() {
         </div>
       </section>
 
-      <TestimonialCarousel
-        placement="testimonials"
-        variant="page"
-        heading="Approved stories, in their own words."
-        description="The collection below is managed by the practice team. Each image is published only after the client has given permission for it to be shared."
-      />
+      <TestimonialCategoryLibrary />
 
       <section className="public-detail-section public-detail-section-soft testimonials-principles-section">
         <div className="home-shell public-detail-heading">

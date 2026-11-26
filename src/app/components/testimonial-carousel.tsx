@@ -4,10 +4,15 @@
 import Link from "next/link";
 import { useCallback, useEffect, useId, useState, type KeyboardEvent } from "react";
 import { apiUrl } from "@/app/lib/auth-client";
+import {
+  testimonialCategoryLabel,
+  type TestimonialCategory,
+  type TestimonialPlacement,
+} from "./testimonial-data";
 import styles from "./testimonial-carousel.module.css";
 
-export type TestimonialPlacement = "homepage" | "testimonials";
-export type TestimonialVariant = "homepage" | "page";
+export type { TestimonialCategory, TestimonialPlacement } from "./testimonial-data";
+export type TestimonialVariant = "homepage" | "page" | "slide";
 
 type Testimonial = {
   id: string;
@@ -15,15 +20,18 @@ type Testimonial = {
   altText: string;
   imageUrl: string;
   placements: TestimonialPlacement[];
+  categories: TestimonialCategory[];
   status: "published";
   sortOrder: number;
 };
 
 type TestimonialCarouselProps = {
   placement: TestimonialPlacement;
+  category?: TestimonialCategory;
   variant?: TestimonialVariant;
   heading?: string;
   description?: string;
+  hideWhenEmpty?: boolean;
 };
 
 function isTestimonial(value: unknown): value is Testimonial {
@@ -39,9 +47,11 @@ function isTestimonial(value: unknown): value is Testimonial {
 
 export default function TestimonialCarousel({
   placement,
+  category,
   variant = "page",
   heading = "Real experiences, shared with care.",
   description = "A small collection of client reflections, published with permission and without promising the same outcome for everyone.",
+  hideWhenEmpty = false,
 }: TestimonialCarouselProps) {
   const headingId = useId();
   const [items, setItems] = useState<Testimonial[]>([]);
@@ -64,8 +74,10 @@ export default function TestimonialCarousel({
 
     async function loadTestimonials() {
       try {
+        const query = new URLSearchParams({ placement });
+        if (category) query.set("category", category);
         const response = await fetch(
-          `${apiUrl}/testimonials?placement=${encodeURIComponent(placement)}`,
+          `${apiUrl}/testimonials?${query.toString()}`,
           { signal: controller.signal, cache: "no-store" },
         );
         const body = (await response.json().catch(() => null)) as { testimonials?: unknown } | null;
@@ -100,7 +112,7 @@ export default function TestimonialCarousel({
       window.clearTimeout(timeoutId);
       window.clearTimeout(startId);
     };
-  }, [placement]);
+  }, [category, placement]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -142,7 +154,15 @@ export default function TestimonialCarousel({
   }
 
   const current = items[activeIndex];
-  const placementLabel = placement === "homepage" ? "Homepage stories" : "Client stories";
+  const placementLabel = placement === "homepage"
+    ? "Homepage stories"
+    : placement === "slides"
+      ? `${category ? testimonialCategoryLabel(category) : "Programme"} slide stories`
+      : category
+        ? `${testimonialCategoryLabel(category)} stories`
+        : "Client stories";
+
+  if (hideWhenEmpty && (isLoading || Boolean(error) || items.length === 0)) return null;
 
   return (
     <section className={`${styles.section} ${styles[variant]}`} aria-labelledby={headingId}>

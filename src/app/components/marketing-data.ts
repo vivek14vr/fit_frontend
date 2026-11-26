@@ -1,5 +1,7 @@
+import type { TestimonialCategory } from "./testimonial-data";
+
 export type Programme = {
-  slug: string;
+  slug: TestimonialCategory;
   number: string;
   title: string;
   shortTitle: string;

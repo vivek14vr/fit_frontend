@@ -1,0 +1,89 @@
+.library {
+  background: #fdfcf8;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 64px));
+  margin-inline: auto;
+  padding-top: clamp(68px, 7vw, 96px);
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, .72fr);
+  gap: clamp(30px, 8vw, 120px);
+  align-items: end;
+}
+
+.eyebrow {
+  grid-column: 1 / -1;
+  margin: 0 0 -24px;
+  color: #4b8173;
+  font: 600 11px / 1.5 var(--font-body);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.intro h2 {
+  max-width: 13ch;
+  margin: 0;
+  color: #164b47;
+  font: 300 clamp(42px, 5vw, 68px) / 1.02 var(--font-written);
+  letter-spacing: -.055em;
+}
+
+.intro > p:last-child {
+  max-width: 480px;
+  margin: 0;
+  color: #5e716b;
+  font-size: 16px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 40px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #d7e1d9;
+}
+
+.tabs button {
+  min-height: 44px;
+  padding: 9px 14px;
+  border: 1px solid #cbd8ce;
+  border-radius: 0;
+  background: transparent;
+  color: #49665b;
+  cursor: pointer;
+  font: 600 12px / 1.2 var(--font-body);
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.tabs button:hover {
+  border-color: #164b47;
+  color: #164b47;
+}
+
+.tabs button[aria-pressed="true"] {
+  border-color: #164b47;
+  background: #164b47;
+  color: #fdfcf8;
+}
+
+.tabs button:focus-visible {
+  outline: 3px solid #b9d7c7;
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .shell { width: min(100% - 40px, 600px); }
+  .intro { grid-template-columns: 1fr; gap: 18px; }
+  .eyebrow { grid-column: auto; margin: 0; }
+  .intro h2 { max-width: 14ch; }
+  .tabs { margin-top: 30px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs button { transition: none; }
+}

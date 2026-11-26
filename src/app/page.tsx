@@ -216,7 +216,19 @@ export default function Home() {
                 </div>
                 <div key={programme.slug} id="programme-panel" role="tabpanel" aria-labelledby={`programme-tab-${active}`} tabIndex={0} className={s.programmePanel} data-home-reveal data-reveal="scale">
                   <div className={s.programmePhoto}><HomePhoto src={programme.image} alt={`Illustrative whole foods for the ${programme.title} programme`} sizes="(max-width: 900px) calc(100vw - 40px), (max-width: 1244px) calc(50vw - 32px), 590px" /></div>
-                  <div className={s.programmeTextGrid}>{programmeData.map((item, index) => <div key={item.slug} className={`${s.programmeCopy} ${active !== index ? s.inactiveProgramme : ""}`} aria-hidden={active !== index} inert={active !== index}><p className={s.eyebrow}>{item.eyebrow}</p><h3>{item.title}</h3><p>{item.description}</p><ul>{item.highlights.map(highlight => <li key={highlight}>{highlight}</li>)}</ul><Link href={`/programmes/${item.slug}`} className={s.programmeLink}>Explore {item.shortTitle} <span aria-hidden="true">↗</span></Link></div>)}</div>
+                  <div className={s.programmeTextGrid}>
+                    {programmeData.map((item, index) => <div key={item.slug} className={`${s.programmeCopy} ${active !== index ? s.inactiveProgramme : ""}`} aria-hidden={active !== index} inert={active !== index}><p className={s.eyebrow}>{item.eyebrow}</p><h3>{item.title}</h3><p>{item.description}</p><ul>{item.highlights.map(highlight => <li key={highlight}>{highlight}</li>)}</ul><Link href={`/programmes/${item.slug}`} className={s.programmeLink}>Explore {item.shortTitle} <span aria-hidden="true">↗</span></Link></div>)}
+                    <div className={s.programmeTestimonial}>
+                      <TestimonialCarousel
+                        placement="slides"
+                        category={programme.slug}
+                        variant="slide"
+                        heading="A story from this path."
+                        description="Shared with permission, without promising the same outcome for everyone."
+                        hideWhenEmpty
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className={s.programmeStorySteps} aria-hidden="true">

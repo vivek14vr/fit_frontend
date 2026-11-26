@@ -18,6 +18,76 @@
   background: #f0f3ec;
 }
 
+.slide {
+  padding: 20px 0 0;
+  color: var(--testimonial-ink);
+}
+
+.slide .shell {
+  width: auto;
+  margin: 0;
+}
+
+.slide .heading {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.slide .heading h2 {
+  max-width: 18ch;
+  margin: 5px 0 0;
+  font-size: clamp(26px, 3vw, 34px);
+}
+
+.slide .heading > p {
+  max-width: 34ch;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.slide .stage {
+  grid-template-columns: 104px minmax(0, 1fr);
+  min-height: 142px;
+  border-color: #cbd8ce;
+  background: #f0f3ec;
+}
+
+.slide .media {
+  aspect-ratio: 1;
+  padding: 10px;
+  background: #e4ebe0;
+}
+
+.slide .copy {
+  padding: 18px 20px;
+}
+
+.slide .copy h3 {
+  max-width: 18ch;
+  margin: 5px 0 8px;
+  font-size: clamp(24px, 2.8vw, 32px);
+}
+
+.slide .permission {
+  max-width: 34ch;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.slide .controls {
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.slide .controls button {
+  min-height: 38px;
+  padding: 7px 10px;
+  font-size: 11px;
+}
+
+.slide .link { display: none; }
+
 .shell {
   width: min(1180px, calc(100% - 64px));
   margin-inline: auto;
@@ -189,6 +259,8 @@
   .stage { grid-template-columns: 1fr; }
   .media { aspect-ratio: 4 / 3; }
   .copy { padding: 28px 24px 32px; }
+  .slide .stage { grid-template-columns: 88px minmax(0, 1fr); }
+  .slide .copy { padding: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
