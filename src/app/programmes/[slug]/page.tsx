@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { MarketingFooter, MarketingHeader } from "@/app/components/marketing-chrome";
 import HomePhoto from "@/app/components/home-photo";
 import { getProgramme, programmeData } from "@/app/components/marketing-data";
+import TestimonialCarousel from "@/app/components/testimonial-carousel";
 import s from "@/app/components/public-pages.module.css";
 
 export function generateStaticParams() {
@@ -55,6 +56,14 @@ export default async function ProgrammeDetailPage({ params }: { params: Promise<
           <div><p className="marketing-detail-body-copy">{programme.detail}</p><div className="marketing-detail-highlights">{programme.highlights.map((highlight, index) => <div key={highlight}><span>0{index + 1}</span><strong>{highlight}</strong></div>)}</div></div>
         </div>
       </section>
+      <TestimonialCarousel
+        placement="slides"
+        category={programme.slug}
+        variant="page"
+        heading={`Stories from the ${programme.title} path.`}
+        description="Approved reflections from people who began with this as a starting point. Every experience is personal, and no outcome is promised."
+        hideWhenEmpty
+      />
       <section className="marketing-detail-close"><div className="home-shell"><p className="marketing-section-kicker">READY WHEN YOU ARE</p><h2>Begin with a conversation.</h2><Link className="marketing-text-arrow" href="/consultation">Book a 1:1 with Deepti <span aria-hidden="true">↗</span></Link></div></section>
       <MarketingFooter />
     </main>
