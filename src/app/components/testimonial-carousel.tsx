@@ -16,7 +16,8 @@ import styles from "./testimonial-carousel.module.css";
 export type { TestimonialCategory, TestimonialPlacement } from "./testimonial-data";
 export type TestimonialVariant = "homepage" | "page" | "slide";
 
-const MAX_GALLERY_ITEMS = 4;
+const GALLERY_PAGE_SIZE = 24;
+const SKELETON_ITEMS = 4;
 
 type Testimonial = {
   id: string;
@@ -49,6 +50,8 @@ type Preview = {
   status: "ready" | "refreshing" | "retried" | "unavailable";
 };
 
+type StoryBatch = { stories: Testimonial[]; incomplete: boolean };
+
 function isTestimonial(value: unknown): value is Testimonial {
   if (!value || typeof value !== "object") return false;
   const item = value as Partial<Testimonial>;
@@ -78,7 +81,7 @@ export default function TestimonialCarousel({
   heading = "Real experiences, shared with care.",
   description = "A small collection of client reflections, published with permission and without promising the same outcome for everyone.",
   hideWhenEmpty = false,
-  maxItems = MAX_GALLERY_ITEMS,
+  maxItems,
   showCategoryFilters = false,
   showAllCategories = false,
 }: TestimonialCarouselProps) {
@@ -102,7 +105,7 @@ export default function TestimonialCarousel({
   const previewModalRef = useModalAccessibility(Boolean(preview), () => setPreview(null));
   const previewCloseRef = useRef<HTMLButtonElement>(null);
 
-  const itemLimit = Math.min(Math.max(maxItems, 1), MAX_GALLERY_ITEMS);
+  const itemLimit = maxItems === undefined ? undefined : Math.max(1, maxItems);
   const placementQuery = Array.from(new Set([placement, ...additionalPlacements])).join(",");
   const loadAllCategories = !category && variant !== "slide";
   const imageSourceKey = `${placementQuery}|${category ?? ""}|${variant}`;
@@ -123,10 +126,10 @@ export default function TestimonialCarousel({
       ? ["general", ...testimonialCategoryOptions.map((option) => option.value)]
       : [category];
 
-    async function loadOne(requestPlacement: string, requestCategory: typeof requestCategories[number]) {
+    async function loadStories(requestPlacement: string, requestCategory: typeof requestCategories[number]): Promise<StoryBatch> {
       const query = new URLSearchParams({
         placement: requestPlacement,
-        limit: String(itemLimit),
+        limit: String(itemLimit ?? GALLERY_PAGE_SIZE),
       });
       if (requestCategory) query.set("category", requestCategory);
 
@@ -141,13 +144,33 @@ export default function TestimonialCarousel({
         query.delete("limit");
         response = await request();
       }
-      if (!response.ok) throw new Error("Unable to load testimonials.");
-      const body = (await response.json().catch(() => null)) as { testimonials?: unknown } | null;
-      if (!Array.isArray(body?.testimonials)) throw new Error("Invalid testimonial response.");
-      const stories = body.testimonials.filter(isTestimonial);
-      return requestCategory === "general"
-        ? stories.filter((story) => !story.categories?.length).slice(0, itemLimit)
-        : stories.slice(0, itemLimit);
+      const stories: Testimonial[] = [];
+      let offset = 0;
+      let incomplete = false;
+      try {
+        for (;;) {
+          if (!response.ok) throw new Error("Unable to load testimonials.");
+          const body = (await response.json().catch(() => null)) as {
+            testimonials?: unknown;
+            nextOffset?: number | null;
+          } | null;
+          if (!Array.isArray(body?.testimonials)) throw new Error("Invalid testimonial response.");
+          stories.push(...body.testimonials.filter(isTestimonial));
+          const nextOffset = body.nextOffset;
+          if (itemLimit !== undefined || typeof nextOffset !== "number") break;
+          if (!Number.isSafeInteger(nextOffset) || nextOffset <= offset) throw new Error("Invalid testimonial response.");
+          offset = nextOffset;
+          query.set("offset", String(offset));
+          response = await request();
+        }
+      } catch (error) {
+        if (stories.length === 0) throw error;
+        incomplete = true;
+      }
+      return {
+        stories: (requestCategory === "general" ? stories.filter((story) => !story.categories?.length) : stories).slice(0, itemLimit),
+        incomplete,
+      };
     }
 
     async function loadTestimonials() {
@@ -155,16 +178,16 @@ export default function TestimonialCarousel({
         // A single placement per request is compatible with both API versions.
         const results = await Promise.allSettled(
           placementQuery.split(",").flatMap((requestedPlacement) =>
-            requestCategories.map((requestedCategory) => loadOne(requestedPlacement, requestedCategory)),
+            requestCategories.map((requestedCategory) => loadStories(requestedPlacement, requestedCategory)),
           ),
         );
 
         const successful = results.filter(
-          (result): result is PromiseFulfilledResult<Testimonial[]> => result.status === "fulfilled",
+          (result): result is PromiseFulfilledResult<StoryBatch> => result.status === "fulfilled",
         );
-        const nextItems = uniqueTestimonials(successful.flatMap((result) => result.value))
+        const nextItems = uniqueTestimonials(successful.flatMap((result) => result.value.stories))
           .sort((a, b) => a.sortOrder - b.sortOrder || (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
-        const failedCount = results.length - successful.length;
+        const failedCount = results.length - successful.length + successful.filter((result) => result.value.incomplete).length;
         if (failedCount > 0 && nextItems.length === 0) {
           const failed = results.find((result) => result.status === "rejected");
           throw failed?.status === "rejected" && failed.reason instanceof Error
@@ -361,6 +384,12 @@ export default function TestimonialCarousel({
           </div>
         ) : null}
 
+        {variant === "homepage" && activeCategory ? (
+          <Link className={styles.categoryLink} href={`/programmes/${activeCategory}`}>
+            Explore {testimonialCategoryLabel(activeCategory)} <span aria-hidden="true">↗</span>
+          </Link>
+        ) : null}
+
         {partialError || (error && hasVisibleStories) ? (
           <div className={styles.partialNotice} role="status">
             <span>{partialError || error}</span>
@@ -380,7 +409,7 @@ export default function TestimonialCarousel({
                   </div>
                 ) : null}
                 <div className={styles.gallery + " " + styles.loadingGallery} aria-hidden="true">
-                  {Array.from({ length: itemLimit }, (_, index) => (
+                  {Array.from({ length: Math.min(itemLimit ?? SKELETON_ITEMS, SKELETON_ITEMS) }, (_, index) => (
                     <div className={styles.skeletonCard} key={index}>
                       <div className={styles.skeletonMedia} />
                       <div className={styles.skeletonLine} />
@@ -407,8 +436,15 @@ export default function TestimonialCarousel({
               <div className={styles.galleryGroup} key={group.key}>
                 {showAllCategoryGallery ? (
                   <div className={styles.galleryGroupHeading}>
-                    <p className={styles.eyebrow}>FOCUS AREA</p>
-                    <h3>{group.label}</h3>
+                    <div>
+                      <p className={styles.eyebrow}>FOCUS AREA</p>
+                      <h3>{group.label}</h3>
+                    </div>
+                    {variant === "homepage" && group.category ? (
+                      <Link className={styles.categoryLink} href={`/programmes/${group.category}`}>
+                        Explore {group.label} <span aria-hidden="true">↗</span>
+                      </Link>
+                    ) : null}
                   </div>
                 ) : null}
                 <div className={styles.gallery} role="list" aria-label={group.label + " gallery"}>

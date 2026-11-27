@@ -58,6 +58,7 @@ export default async function ProgrammeDetailPage({ params }: { params: Promise<
       </section>
       <TestimonialCarousel
         placement="slides"
+        additionalPlacements={["homepage", "testimonials"]}
         category={programme.slug}
         variant="page"
         heading={`Stories from the ${programme.title} path.`}
