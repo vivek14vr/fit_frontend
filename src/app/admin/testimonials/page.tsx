@@ -100,16 +100,23 @@ export default function AdminTestimonialsPage() {
   useEffect(() => {
     let cancelled = false;
     const controller = new AbortController();
+    let timeoutId: number;
 
     async function load() {
+      timeoutId = window.setTimeout(() => {
+        controller.abort();
+        setError("Testimonials took too long to load. Please try again.");
+        setIsLoading(false);
+      }, 10_000);
       try {
         const response = await fetchWithAuth(`${apiUrl}/admin/testimonials`, { signal: controller.signal });
         const body = (await response.json().catch(() => null)) as { testimonials?: Testimonial[] } & ApiMessage | null;
-        if (!response.ok || !body?.testimonials) throw new Error(getErrorMessage(body, "Unable to load testimonials."));
-        if (!cancelled) setTestimonials(body.testimonials);
+        if (!response.ok || !Array.isArray(body?.testimonials)) throw new Error(getErrorMessage(body, "Unable to load testimonials."));
+        if (!cancelled && !controller.signal.aborted) setTestimonials(body.testimonials);
       } catch (requestError) {
         if (!cancelled && !controller.signal.aborted) setError(requestError instanceof Error ? requestError.message : "Unable to load testimonials.");
       } finally {
+        window.clearTimeout(timeoutId);
         if (!cancelled) setIsLoading(false);
       }
     }
@@ -123,6 +130,7 @@ export default function AdminTestimonialsPage() {
       cancelled = true;
       controller.abort();
       window.clearTimeout(startId);
+      window.clearTimeout(timeoutId);
     };
   }, [reloadKey]);
 
@@ -359,15 +367,17 @@ export default function AdminTestimonialsPage() {
         <article className="users-card users-roster-card">
           <div className="users-roster-toolbar">
             <div><p className="dashboard-panel-label">STORY LIBRARY</p><h2>Approved reflections</h2></div>
-            <span aria-live="polite">{testimonials.length} total</span>
+            {!isLoading && !error ? <span aria-live="polite">{testimonials.length} total</span> : null}
           </div>
-          {isLoading ? <p className="users-empty" role="status">Loading testimonials…</p> : testimonials.length === 0 ? <p className="users-empty">No testimonials yet. Add the first approved story image.</p> : (
-            <div className="users-table-wrap">
+          {isLoading ? <div className="admin-content-loader" role="status">Loading testimonials…</div> : error ? (
+            <button className="dashboard-inline-retry" type="button" onClick={() => setReloadKey((key) => key + 1)}>Try again</button>
+          ) : testimonials.length === 0 ? <p className="users-empty">No testimonials yet. Add the first approved story image.</p> : (
+            <div className="users-table-wrap" tabIndex={0} role="region" aria-label="Testimonial library table">
               <table className={`users-table ${styles.table}`}>
                 <thead><tr><th scope="col">Story</th><th scope="col">Placement</th><th scope="col">Category</th><th scope="col">Status</th><th scope="col">Order</th><th scope="col">Updated</th><th scope="col"><span className={styles.srOnly}>Actions</span></th></tr></thead>
                 <tbody>{testimonials.map((testimonial) => (
                   <tr key={testimonial.id}>
-                    <th scope="row"><div className={styles.storyCell}><img src={testimonial.imageUrl} alt="" /><span>{testimonial.title}<small>{testimonial.altText}</small></span></div></th>
+                    <th scope="row"><div className={styles.storyCell}><img src={testimonial.imageUrl} alt="" loading="lazy" /><span>{testimonial.title}<small>{testimonial.altText}</small></span></div></th>
                     <td><div className={styles.tags}>{testimonial.placements.map((placement) => <span key={placement}>{placementLabel(placement)}</span>)}</div></td>
                     <td><div className={styles.tags}>{testimonial.categories?.length ? testimonial.categories.map((category) => <span key={category}>{testimonialCategoryLabel(category)}</span>) : <span>General</span>}</div></td>
                     <td><span className={`${styles.status} ${styles[`status-${testimonial.status}`]}`}>{testimonial.status}</span></td>

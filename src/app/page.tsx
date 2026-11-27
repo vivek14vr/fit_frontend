@@ -40,11 +40,46 @@ export default function Home() {
   const [showMobileBooking, setShowMobileBooking] = useState(false);
   const [step, setStep] = useState<number | null>(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const programmeSection = useRef<HTMLElement>(null);
+  const programmeTrack = useRef<HTMLDivElement>(null);
+  const programmeSlide = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLDivElement>(null);
-  const manualProgramme = useRef(false);
   const programme = programmeData[active];
   useHomeChoreography(root);
+
+  useEffect(() => {
+    const track = programmeTrack.current;
+    const slide = programmeSlide.current;
+    if (!track || !slide) return;
+
+    let frame = 0;
+    let lastScrollIndex: number | undefined;
+    const update = () => {
+      frame = 0;
+      if (getComputedStyle(slide).position !== "sticky") {
+        lastScrollIndex = undefined;
+        return;
+      }
+      const travel = track.offsetHeight - slide.offsetHeight;
+      const offset = slide.getBoundingClientRect().top - track.getBoundingClientRect().top;
+      if (travel <= 0 || offset <= 0 || offset >= travel) return;
+      const index = Math.min(programmeData.length - 1, Math.floor(offset / travel * programmeData.length));
+      if (index !== lastScrollIndex && !slide.querySelector(":focus-visible")) {
+        lastScrollIndex = index;
+        setActive(index);
+      }
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    schedule();
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     const element = root.current;
@@ -57,32 +92,6 @@ export default function Home() {
     });
     sections.forEach(section => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const section = programmeSection.current;
-    if (!section || !("IntersectionObserver" in window)) return;
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting || manualProgramme.current) return;
-        const index = Number((entry.target as HTMLElement).dataset.programmeStep);
-        if (Number.isInteger(index)) setActive(index);
-      });
-    }, { rootMargin: "-42% 0px -42% 0px", threshold: 0.01 });
-    section.querySelectorAll("[data-programme-step]").forEach(element => observer.observe(element));
-    const resume = () => { manualProgramme.current = false; };
-    const resumeKeys = (event: KeyboardEvent) => {
-      if (["PageDown", "PageUp", "ArrowDown", "ArrowUp", "Home", "End", " "].includes(event.key)) resume();
-    };
-    window.addEventListener("wheel", resume, { passive: true });
-    window.addEventListener("touchstart", resume, { passive: true });
-    window.addEventListener("keydown", resumeKeys);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("wheel", resume);
-      window.removeEventListener("touchstart", resume);
-      window.removeEventListener("keydown", resumeKeys);
-    };
   }, []);
 
   useEffect(() => {
@@ -170,6 +179,18 @@ export default function Home() {
           <div data-home-reveal data-reveal="right"><p>A 1:1 Health Assessment is a space to talk through what you have noticed, what you have tried and what you want to understand. We consider your priorities, routine and relevant reports before discussing whether a programme is right for you.</p><ol className={s.callDetails} data-step-list><li><span>01</span>Your history, food patterns and priorities</li><li><span>02</span>The routines and markers worth noticing</li><li><span>03</span>A practical next step, if the practice is a good fit</li></ol><Link href="/consultation" className={s.textLink}>View consultation options <span aria-hidden="true">↗</span></Link><p className={s.callPricing}>Based in India · Online from anywhere in the world</p></div>
         </section>
 
+        <TestimonialCarousel
+          id="client-testimonials"
+          placement="homepage"
+          additionalPlacements={["slides"]}
+          variant="homepage"
+          showCategoryFilters
+          showAllCategories
+          maxItems={4}
+          heading="Client testimonials"
+          description="Browse client stories by focus area. Experiences vary, and every story is shared with permission."
+        />
+
         <section id="watch-video" className={`${s.section} ${s.videoSection}`} data-transition-section="approach">
           <div className={s.videoHeading} data-home-reveal data-reveal="up">
             <div><p className={s.eyebrow}>SEE THE DIFFERENCE</p><h2>Thoughtful nutrition<br /><em>for real-life health.</em></h2></div>
@@ -198,41 +219,37 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="programmes" className={s.programmes} ref={programmeSection} data-transition-section="programmes">
+        <section id="programmes" className={s.programmes} data-transition-section="programmes">
           <div className={s.section}>
-            <div className={s.sectionHead} data-home-reveal><div><p className={s.eyebrow}>SIX STARTING POINTS. ONE PERSONALISED PRACTICE.</p><h2>Choose what brought<br /><em>you here.</em></h2></div><p>Explore digestion, liver wellbeing, metabolic health, skin, hormones or mood—then talk with Deepti before deciding what comes next.</p></div>
-            <div className={s.programmeStory} style={{ "--programme-progress": (active + 1) / programmeData.length, "--programme-count": programmeData.length } as CSSProperties}>
-              <div className={s.programmeStorySticky}>
+            <div className={s.sectionHead} data-home-reveal>
+              <div><p className={s.eyebrow}>SIX STARTING POINTS. ONE PERSONALISED PRACTICE.</p><h2>Choose what brought<br /><em>you here.</em></h2></div>
+              <div>
+                <p className={s.programmeIntro}>Explore digestion, liver wellbeing, metabolic health, skin, hormones or mood—then talk with Deepti before deciding what comes next.</p>
+                <a className={s.textLink} href="#client-testimonials">Browse client testimonials <span aria-hidden="true">↓</span></a>
+              </div>
+            </div>
+            <div ref={programmeTrack} className={s.programmeStory}>
+              <div ref={programmeSlide} className={s.programmeSlide}>
                 <div className={s.tabs} role="tablist" aria-label="Explore nutrition programmes">
-                  {programmeData.map((item, index) => <button key={item.slug} ref={el => { tabs.current[index] = el; }} type="button" role="tab" id={`programme-tab-${index}`} aria-controls="programme-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => { manualProgramme.current = true; setActive(index); }} onKeyDown={event => {
+                  {programmeData.map((item, index) => <button key={item.slug} ref={el => { tabs.current[index] = el; }} type="button" role="tab" id={`programme-tab-${index}`} aria-controls="programme-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => setActive(index)} onKeyDown={event => {
                     let next = index;
                     if (event.key === "ArrowRight") next = (index + 1) % programmeData.length;
                     else if (event.key === "ArrowLeft") next = (index + programmeData.length - 1) % programmeData.length;
                     else if (event.key === "Home") next = 0;
                     else if (event.key === "End") next = programmeData.length - 1;
                     else return;
-                    event.preventDefault(); manualProgramme.current = true; setActive(next); tabs.current[next]?.focus();
-                  }}><small>{item.number}</small>{item.title}</button>)}
+                    event.preventDefault(); setActive(next); tabs.current[next]?.focus();
+                  }}><small aria-hidden="true">{item.number}</small><span>{item.title}</span></button>)}
                 </div>
-                <div key={programme.slug} id="programme-panel" role="tabpanel" aria-labelledby={`programme-tab-${active}`} tabIndex={0} className={s.programmePanel} data-home-reveal data-reveal="scale">
-                  <div className={s.programmePhoto}><HomePhoto src={programme.image} alt={`Illustrative whole foods for the ${programme.title} programme`} sizes="(max-width: 900px) calc(100vw - 40px), (max-width: 1244px) calc(50vw - 32px), 590px" /></div>
-                  <div className={s.programmeTextGrid}>
-                    {programmeData.map((item, index) => <div key={item.slug} className={`${s.programmeCopy} ${active !== index ? s.inactiveProgramme : ""}`} aria-hidden={active !== index} inert={active !== index}><p className={s.eyebrow}>{item.eyebrow}</p><h3>{item.title}</h3><p>{item.description}</p><ul>{item.highlights.map(highlight => <li key={highlight}>{highlight}</li>)}</ul><Link href={`/programmes/${item.slug}`} className={s.programmeLink}>Explore {item.shortTitle} <span aria-hidden="true">↗</span></Link></div>)}
-                    <div className={s.programmeTestimonial}>
-                      <TestimonialCarousel
-                        placement="slides"
-                        category={programme.slug}
-                        variant="slide"
-                        heading="A story from this path."
-                        description="Shared with permission, without promising the same outcome for everyone."
-                        hideWhenEmpty
-                      />
-                    </div>
+                <div id="programme-panel" role="tabpanel" aria-labelledby={`programme-tab-${active}`} tabIndex={0} className={s.programmePanel}>
+                  <div key={programme.slug} className={s.programmePhoto}><HomePhoto src={programme.image} alt={`Illustrative whole foods for the ${programme.title} programme`} sizes="(max-width: 700px) calc(100vw - 64px), (max-width: 1504px) 45vw, 670px" /></div>
+                  <div key={`${programme.slug}-copy`} className={s.programmeCopy}>
+                    <h3>{programme.title}</h3>
+                    <p>{programme.description}</p>
+                    <ul>{programme.highlights.map(highlight => <li key={highlight}>{highlight}</li>)}</ul>
+                    <Link href={`/programmes/${programme.slug}`} className={s.programmeLink}>Explore {programme.shortTitle} <span aria-hidden="true">↗</span></Link>
                   </div>
                 </div>
-              </div>
-              <div className={s.programmeStorySteps} aria-hidden="true">
-                {programmeData.map((item, index) => <div key={item.slug} data-programme-step={index} className={s.programmeStoryStep} style={{ "--programme-index": index } as CSSProperties} />)}
               </div>
             </div>
             <p className={s.programmeHelp}>Unsure which path is right? <Link href="/consultation">Start with a conversation ↗</Link></p>
@@ -243,13 +260,6 @@ export default function Home() {
           <div data-home-reveal data-reveal="left"><p className={s.eyebrow}>HOW SUPPORT TAKES SHAPE</p><h2>Understand first.<br /><em>Then make it useful.</em></h2><p>Good guidance turns complexity into a few things you can notice, practise and review.</p><span className={s.journeyNote}>Listen → Make sense → Practise</span></div>
           <div className={s.journeySteps} data-home-reveal data-reveal="right" style={{ "--journey-progress": step === null ? 0 : (step + 1) / steps.length } as CSSProperties}>{steps.map(([title, description], index) => <div className={`${s.step}${step === index ? ` ${s.stepActive}` : ""}`} key={title}><h3><button type="button" aria-expanded={step === index} aria-controls={`step-${index}`} onClick={() => setStep(step === index ? null : index)}><small>0{index + 1}</small>{title}<span aria-hidden="true">{step === index ? "−" : "+"}</span></button></h3><div id={`step-${index}`} hidden={step !== index}><p>{description}</p></div></div>)}</div>
         </section>
-
-        <TestimonialCarousel
-          placement="homepage"
-          variant="homepage"
-          heading="Real experiences, shared with care."
-          description="Approved reflections from people who have worked with Deepti. Every story remains personal; no experience is presented as a promised outcome."
-        />
 
         <section className={`${s.section} ${s.faq}`} data-transition-section="faq"><div data-home-reveal data-reveal="left"><p className={s.eyebrow}>BEFORE WE BEGIN</p><h2>A few things<br /><em>you may wonder.</em></h2></div><div data-home-reveal data-reveal="right">{questions.map(([question, answer]) => <details className={s.question} key={question}><summary>{question}<span aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div></section>
 

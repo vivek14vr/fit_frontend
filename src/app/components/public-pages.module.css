@@ -577,6 +577,27 @@
   background: radial-gradient(circle at 12% 20%, #edf3eb, transparent 35%), #fdfcf8;
 }
 
+/* The shared marketing stylesheet also uses the ink variant for dark editorial
+   sections. Programme detail pages deliberately use a light hero, so reset the
+   variant's inherited paper colours here as well as its background. */
+.programmeDetail :global(.marketing-programme-detail-hero.marketing-detail-ink) {
+  background: radial-gradient(circle at 12% 20%, #edf3eb, transparent 35%), #fdfcf8;
+  color: var(--home-ink);
+}
+
+.programmeDetail :global(.marketing-detail-ink .marketing-back-link),
+.programmeDetail :global(.marketing-detail-ink .marketing-eyebrow) {
+  color: var(--home-haldi);
+}
+
+.programmeDetail :global(.marketing-detail-ink h1) {
+  color: var(--home-ink);
+}
+
+.programmeDetail :global(.marketing-detail-ink .marketing-detail-lede) {
+  color: var(--home-muted);
+}
+
 .programmeDetail :global(.marketing-detail-hero-grid) { grid-template-columns: minmax(0, 1fr) minmax(360px, .88fr); gap: clamp(48px, 7vw, 100px); }
 .programmeDetail :global(.marketing-back-link) { margin-bottom: 30px; color: var(--home-muted); }
 .programmeDetail :global(.marketing-programme-detail-hero .marketing-eyebrow) { color: var(--home-haldi); }

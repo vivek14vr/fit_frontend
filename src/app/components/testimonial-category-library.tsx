@@ -6,11 +6,15 @@ import {
   testimonialCategoryLabel,
   testimonialCategoryOptions,
   type TestimonialCategory,
+  type TestimonialPlacement,
 } from "./testimonial-data";
 import styles from "./testimonial-category-library.module.css";
 
+const publicTestimonialPlacements: readonly TestimonialPlacement[] = ["testimonials"];
+
 export default function TestimonialCategoryLibrary() {
   const tabListId = useId();
+  const panelId = `${tabListId}-panel`;
   const [category, setCategory] = useState<TestimonialCategory | undefined>();
 
   return (
@@ -25,6 +29,7 @@ export default function TestimonialCategoryLibrary() {
           <button
             type="button"
             aria-pressed={!category}
+            aria-controls={panelId}
             onClick={() => setCategory(undefined)}
           >
             All stories
@@ -34,6 +39,7 @@ export default function TestimonialCategoryLibrary() {
               key={option.value}
               type="button"
               aria-pressed={category === option.value}
+              aria-controls={panelId}
               onClick={() => setCategory(option.value)}
             >
               {option.label}
@@ -41,12 +47,14 @@ export default function TestimonialCategoryLibrary() {
           ))}
         </div>
       </div>
-      <div id="testimonial-category-panel" aria-label={category ? `${testimonialCategoryLabel(category)} client stories` : "All client stories"}>
+      <div id={panelId} role="region" aria-live="polite" aria-label={category ? `${testimonialCategoryLabel(category)} client stories` : "All client stories"}>
         <TestimonialCarousel
           key={category ?? "all"}
-          placement="testimonials"
+          placement="slides"
+          additionalPlacements={publicTestimonialPlacements}
           category={category}
           variant="page"
+          showAllCategories
           heading={category ? `${testimonialCategoryLabel(category)} stories, in their own words.` : "Approved stories, in their own words."}
           description={category ? `Permission-approved reflections from the ${testimonialCategoryLabel(category)} focus area.` : "The collection below is managed by the practice team. Each image is published only after the client has given permission for it to be shared."}
         />

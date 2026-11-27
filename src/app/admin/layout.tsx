@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   apiUrl,
   clearStoredAuth,
@@ -11,6 +11,7 @@ import {
   type UserRole,
 } from "@/app/lib/auth-client";
 import { NotificationMark, PracticeMark } from "@/app/components/protected-dashboard";
+import { useModalAccessibility } from "@/app/components/use-modal-accessibility";
 
 type AdminUser = {
   name: string;
@@ -44,8 +45,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [status, setStatus] = useState<AdminStatus>("loading");
   const [retryCount, setRetryCount] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const sidebarCloseButtonRef = useRef<HTMLButtonElement>(null);
-  const sidebarToggleRef = useRef<HTMLButtonElement>(null);
+  const sidebarRef = useModalAccessibility(isSidebarOpen, () => setIsSidebarOpen(false));
 
   useEffect(() => {
     if (isLoginRoute) {
@@ -127,22 +127,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       return;
     }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsSidebarOpen(false);
-        sidebarToggleRef.current?.focus();
-      }
+    const desktop = window.matchMedia("(min-width: 1025px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setIsSidebarOpen(false);
     };
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
-    sidebarCloseButtonRef.current?.focus();
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
   }, [isSidebarOpen]);
 
   function handleLogout() {
@@ -243,18 +233,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <main className="dashboard-page dashboard-admin">
+    <main className="dashboard-page dashboard-admin admin-workspace">
       <header className="dashboard-topbar">
         <div className="dashboard-shell dashboard-topbar-inner">
-          <Link className="dashboard-wordmark" href="/">
-            <span className="dashboard-brand-lockup">
-              <span className="dashboard-brand-mark"><PracticeMark /></span>
-              <span className="dashboard-brand-name">DEEPTI SHERAWAT</span>
-            </span>
-            <small>AYURVEDIC &amp; FUNCTIONAL NUTRITION</small>
-          </Link>
           <button
-            ref={sidebarToggleRef}
             className="dashboard-sidebar-toggle"
             type="button"
             aria-controls="admin-sidebar"
@@ -268,6 +250,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </span>
             <span>{isSidebarOpen ? "Close menu" : "Menu"}</span>
           </button>
+          <Link className="dashboard-wordmark" href="/">
+            <span className="dashboard-brand-lockup">
+              <span className="dashboard-brand-mark"><PracticeMark /></span>
+              <span className="dashboard-brand-name">DEEPTI SHERAWAT</span>
+            </span>
+            <small>AYURVEDIC &amp; FUNCTIONAL NUTRITION</small>
+          </Link>
           <div className="dashboard-account">
             <button className="dashboard-notification" type="button" aria-label="Notifications">
               <NotificationMark />
@@ -292,20 +281,23 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           className="dashboard-sidebar-scrim"
           type="button"
           aria-label="Close admin navigation"
+          tabIndex={-1}
           onClick={closeSidebar}
         />
       ) : null}
 
       <div className="dashboard-shell dashboard-layout">
         <aside
+          ref={sidebarRef}
           id="admin-sidebar"
           className={`dashboard-sidebar${isSidebarOpen ? " is-open" : ""}`}
           aria-label="Admin navigation"
+          role={isSidebarOpen ? "dialog" : undefined}
+          aria-modal={isSidebarOpen ? true : undefined}
         >
           <div className="dashboard-sidebar-mobile-heading">
             <span>Admin navigation</span>
             <button
-              ref={sidebarCloseButtonRef}
               className="dashboard-sidebar-close"
               type="button"
               aria-label="Close admin navigation"
@@ -385,9 +377,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
         </aside>
 
-        <section className="dashboard-content admin-workspace-content">
+        <div className="dashboard-content admin-workspace-content" inert={isSidebarOpen}>
           {children}
-        </section>
+        </div>
       </div>
     </main>
   );
